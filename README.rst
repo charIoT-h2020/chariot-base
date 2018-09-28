@@ -2,9 +2,6 @@
 Chariot Base
 ======================
 
-.. image:: https://img.shields.io/travis/theofilis/chariot_northbound_dispatcher.svg
-        :target: https://travis-ci.org/theofilis/chariot_base
-
 .. image:: https://readthedocs.org/projects/chariot-base/badge/?version=latest
         :target: https://chariot-base.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
