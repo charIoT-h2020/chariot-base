@@ -2,6 +2,9 @@
 Chariot Base
 ======================
 
+.. image:: https://img.shields.io/pypi/v/chariot-base.svg
+        :target: https://pypi.python.org/pypi/chariot-base
+
 .. image:: https://readthedocs.org/projects/chariot-base/badge/?version=latest
         :target: https://chariot-base.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
