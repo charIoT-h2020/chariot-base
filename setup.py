@@ -37,6 +37,7 @@ setup(
     install_requires=requirements,
     license="EPL-1.0",
     long_description=readme + '\n\n' + history,
+    long_description_content_type='text/markdown',
     include_package_data=True,
     keywords='chariot_base',
     name='chariot_base',
