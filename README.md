@@ -1,7 +1,12 @@
 # Chariot Base
 
-![https://pypi.python.org/pypi/chariot-base](https://img.shields.io/pypi/v/chariot-base.svg)
-![Documentation Status](https://chariot-base.readthedocs.io/en/latest/?badge=latest)
+<a href="https://pypi.python.org/pypi/chariot-base">
+    <img src="https://img.shields.io/pypi/v/chariot-base.svg" /></a>
+</a>
+
+<a href="https://chariot-base.readthedocs.io/en/latest/?badge=latest">
+    <img src="https://readthedocs.org/projects/chariot-base/badge/?version=latest" /></a>
+</a>
 
 Base utilities for chariot micro-services.
 
