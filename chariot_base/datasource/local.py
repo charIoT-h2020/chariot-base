@@ -13,7 +13,7 @@ class LocalDataSource(object):
                 'measurement': point.table,
                 'tags': {
                     'topic': point.topic,
-                    'id': 'urn:ngsi-ld:gateway_5410ec4d1601'
+                    'id': 'gateway_5410ec4d1601'
                 },
                 'time': point.timestamp,
                 'fields': point.message
