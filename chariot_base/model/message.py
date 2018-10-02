@@ -8,8 +8,15 @@ class Message(object):
         self.value = value
         self.destination = None
 
-    def __str__(self):
-        return json.dumps({
+    def dict(self):
+        return {
             'sensor_id': self.sensor_id,
-            'value': self.value
-        })
+            'value': self.value,
+            'destination': self.destination
+        }
+
+    def __str__(self):
+        return self.__unicode__()
+
+    def __unicode__(self):
+        return json.dumps(self.dict())

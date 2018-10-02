@@ -14,4 +14,7 @@ class Subscriber(object):
         }
 
     def __str__(self):
+        return self.__unicode__()
+
+    def __unicode__(self):
         return json.dumps(self.dict())
