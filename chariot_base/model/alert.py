@@ -4,7 +4,9 @@ import datetime
 
 
 class Alert(object):
-
+    """
+    Describe each alert raised by Chariot
+    """
     def __init__(self, msg=None, severity=100):
         self.timestamp = datetime.datetime.now().isoformat()
         self.message = msg

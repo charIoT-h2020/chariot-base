@@ -3,6 +3,9 @@ import json
 
 
 class Subscriber(object):
+    """
+    Chariot gateway subscriber
+    """
     def __init__(self, subscriber_id):
         self.id = subscriber_id
         self.sensors = set()

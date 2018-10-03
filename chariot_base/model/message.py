@@ -3,6 +3,9 @@ import json
 
 
 class Message(object):
+    """
+    Describe message passed between Chariot's components
+    """
     def __init__(self, sensor_id, value):
         self.sensor_id = sensor_id
         self.value = value
