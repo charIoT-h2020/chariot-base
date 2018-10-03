@@ -4,6 +4,7 @@ stages:
   - deploy
 
 before_script:
+   - apk add gcc g++ make libffi-dev openssl-dev
    - pip install -r requirements_dev.txt
    - python setup.py sdist bdist_wheel
 
