@@ -1,4 +1,4 @@
-# History
+# Changelog
 
 ## 0.1.10 (2018-10-01)
 

@@ -1,0 +1,21 @@
+site_name: Chariot Base
+site_author: 'CLMS Hellas'
+
+theme:
+  name: 'material'
+  font:
+    text: 'Ubuntu'
+    code: 'Ubuntu Mono'
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
+
+nav:
+- Home: 'README.md'
+- Changelog: 'HISTORY.md'
+- Credits: 'AUTHORS.md'
