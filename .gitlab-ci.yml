@@ -17,7 +17,7 @@ build_package:
 test_package:
   stage: test
   script:
-    - coverage run --source chariot_base setup.py test
+    - coverage run setup.py test
     - coverage html
   only:
     - tags

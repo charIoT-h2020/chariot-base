@@ -1,0 +1,6 @@
+# -*- conf -*-
+
+[run]
+branch = True
+source =
+    chariot_base
