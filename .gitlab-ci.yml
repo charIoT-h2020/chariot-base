@@ -1,12 +1,26 @@
 image: python:3.6-alpine
 
 stages:
+  - build
+  - test
   - deploy
 
-before_script:
-   - apk add gcc g++ make libffi-dev openssl-dev
-   - pip install -r requirements_dev.txt
-   - python setup.py sdist bdist_wheel
+build_package:
+  stage: build
+  script:
+    - apk add gcc g++ make libffi-dev openssl-dev
+    - pip install -r requirements_dev.txt
+    - python setup.py sdist bdist_wheel
+  only:
+    - tags
+
+test_package:
+  stage: test
+  script:
+    - coverage run --source chariot_base setup.py test
+    - coverage html
+  only:
+    - tags
 
 deploy_production:
   stage: deploy
