@@ -16,6 +16,6 @@ markdown_extensions:
       permalink: true
 
 nav:
-- Home: 'README.md'
-- Changelog: 'HISTORY.md'
-- Credits: 'AUTHORS.md'
+- Home: 'README.rst'
+- Changelog: 'HISTORY.rst'
+- Credits: 'AUTHORS.rst'
