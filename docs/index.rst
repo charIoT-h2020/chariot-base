@@ -1,4 +1,4 @@
-Welcome to Chariot Privacy Engine's documentation!
+Welcome to Chariot Base documentation!
 ======================================
 
 .. toctree::

@@ -12,9 +12,9 @@ To install Chariot Privacy Engine, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install chariot_privacy_engine
+    $ pip install chariot_base
 
-This is the preferred method to install Chariot Privacy Engine, as it will always install the most recent stable release.
+This is the preferred method to install Chariot Base, as it will always install the most recent stable release.
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
@@ -26,19 +26,19 @@ you through the process.
 From sources
 ------------
 
-The sources for Chariot Privacy Engine can be downloaded from the `Github repo`_.
+The sources for Chariot Privacy Engine can be downloaded from the `Gitlab repo`_.
 
 You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/theofilis/chariot_privacy_engine
+    $ git clone git@gitlab.com:chariot-h2020/chariot_base.git
 
 Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl  -OL https://github.com/theofilis/chariot_privacy_engine/tarball/master
+    $ curl  -OL https://gitlab.com/chariot-h2020/chariot_base/-/archive/master/chariot_base-master.zip
 
 Once you have a copy of the source, you can install it with:
 
@@ -47,5 +47,5 @@ Once you have a copy of the source, you can install it with:
     $ python setup.py install
 
 
-.. _Github repo: https://github.com/theofilis/chariot_privacy_engine
+.. _Gitlab repo: https://gitlab.com/chariot-h2020/chariot_base
 .. _tarball: https://github.com/theofilis/chariot_privacy_engine/tarball/master
