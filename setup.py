@@ -13,9 +13,12 @@ with open('./HISTORY.rst') as history_file:
 
 requirements = [
     'paho-mqtt',
+    'asyncio',
+    'gmqtt',
     'influxdb',
     'cloudant',
-    'ibmiotf'
+    'ibmiotf',
+    'pytest'
 ]
 
 setup_requirements = [ ]
