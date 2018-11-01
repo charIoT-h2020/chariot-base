@@ -11,6 +11,10 @@ build_package:
     - apk add gcc g++ make libffi-dev openssl-dev
     - pip install -r requirements_dev.txt
     - python setup.py sdist bdist_wheel
+  artifacts:
+    paths:
+      - dist
+    expire_in: 1 day
   only:
     - tags
 
@@ -49,5 +53,7 @@ deploy_production:
   script:
     - pip install twine
     - twine upload dist/*
+  dependencies:
+    - build_package
   only:
     - tags
