@@ -4,30 +4,51 @@
 import asyncio
 
 import os
+import uuid
 import pytest
 
 from chariot_base.tests import Callbacks, clean_retained, cleanup
 
-host = 'mqtt.flespi.io'
+host = 'localhost'
 port = 1883
-username = os.getenv('USERNAME', 'fake_token')
+username = ''
+
+TOPICS = ("TopicA", "TopicA/B", "TopicA/C", "TopicA/D", "/TopicA")
+WILD_TOPICS = ("TopicA/+", "+/C", "#", "/#", "/+", "+/+", "TopicA/#")
+NO_SUBSCRIBE_TOPICS = ("test/nosubscribe",)
 
 
 @pytest.fixture()
 async def init_clients():
     await cleanup(host, port, username)
 
-    aclient = gmqtt.Client("myclientid", clean_session=True)
-    aclient.set_auth_credentials(username)
+    a_client = gmqtt.Client('client_%s' % uuid.uuid4(), clean_session=True)
+    a_client.set_auth_credentials(username)
     callback = Callbacks()
-    callback.register_for_client(aclient)
+    callback.register_for_client(a_client)
 
-    bclient = gmqtt.Client("myclientid2", clean_session=True)
-    bclient.set_auth_credentials(username)
+    b_client = gmqtt.Client('client_%s' % uuid.uuid4(), clean_session=True)
+    b_client.set_auth_credentials(username)
     callback2 = Callbacks()
-    callback2.register_for_client(bclient)
+    callback2.register_for_client(b_client)
 
-    yield aclient, callback, bclient, callback2
+    yield a_client, callback, b_client, callback2
 
-    await aclient.disconnect()
-    await bclient.disconnect()
+    await a_client.disconnect()
+    await b_client.disconnect()
+
+
+@pytest.mark.asyncio
+async def test_basic(init_clients):
+    a_client, callback, b_client, callback2 = init_clients
+
+    await a_client.connect(host=host, port=port, version=4)
+    await b_client.connect(host=host, port=port, version=4)
+    b_client.subscribe(TOPICS[0])
+    await asyncio.sleep(1)
+
+    a_client.publish(TOPICS[0], b"qos 0")
+    a_client.publish(TOPICS[0], b"qos 1", 1)
+    a_client.publish(TOPICS[0], b"qos 2", 2)
+    await asyncio.sleep(1)
+    assert len(callback2.messages) == 3

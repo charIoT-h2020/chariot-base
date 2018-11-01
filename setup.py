@@ -18,7 +18,8 @@ requirements = [
     'influxdb',
     'cloudant',
     'ibmiotf',
-    'pytest'
+    'pytest',
+    'pytest-asyncio'
 ]
 
 setup_requirements = [ ]
