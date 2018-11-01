@@ -4,51 +4,52 @@
 import asyncio
 
 import os
+import gmqtt
 import uuid
 import pytest
 
 from chariot_base.tests import Callbacks, clean_retained, cleanup
 
-host = 'localhost'
+host = 'iot.eclipse.org'
 port = 1883
 username = ''
 
 TOPICS = ("TopicA", "TopicA/B", "TopicA/C", "TopicA/D", "/TopicA")
-WILD_TOPICS = ("TopicA/+", "+/C", "#", "/#", "/+", "+/+", "TopicA/#")
-NO_SUBSCRIBE_TOPICS = ("test/nosubscribe",)
+WILDTOPICS = ("TopicA/+", "+/C", "#", "/#", "/+", "+/+", "TopicA/#")
+NOSUBSCRIBE_TOPICS = ("test/nosubscribe",)
 
 
 @pytest.fixture()
 async def init_clients():
     await cleanup(host, port, username)
 
-    a_client = gmqtt.Client('client_%s' % uuid.uuid4(), clean_session=True)
-    a_client.set_auth_credentials(username)
+    aclient = gmqtt.Client("myclientid", clean_session=True)
+    aclient.set_auth_credentials(username)
     callback = Callbacks()
-    callback.register_for_client(a_client)
+    callback.register_for_client(aclient)
 
-    b_client = gmqtt.Client('client_%s' % uuid.uuid4(), clean_session=True)
-    b_client.set_auth_credentials(username)
+    bclient = gmqtt.Client("myclientid2", clean_session=True)
+    bclient.set_auth_credentials(username)
     callback2 = Callbacks()
-    callback2.register_for_client(b_client)
+    callback2.register_for_client(bclient)
 
-    yield a_client, callback, b_client, callback2
+    yield aclient, callback, bclient, callback2
 
-    await a_client.disconnect()
-    await b_client.disconnect()
+    await aclient.disconnect()
+    await bclient.disconnect()
 
 
 @pytest.mark.asyncio
 async def test_basic(init_clients):
-    a_client, callback, b_client, callback2 = init_clients
+    aclient, callback, bclient, callback2 = init_clients
 
-    await a_client.connect(host=host, port=port, version=4)
-    await b_client.connect(host=host, port=port, version=4)
-    b_client.subscribe(TOPICS[0])
+    await aclient.connect(host=host, port=port, version=4)
+    await bclient.connect(host=host, port=port, version=4)
+    bclient.subscribe(TOPICS[0], qos=2)
     await asyncio.sleep(1)
 
-    a_client.publish(TOPICS[0], b"qos 0")
-    a_client.publish(TOPICS[0], b"qos 1", 1)
-    a_client.publish(TOPICS[0], b"qos 2", 2)
+    aclient.publish(TOPICS[0], b"qos 0")
+    aclient.publish(TOPICS[0], b"qos 1", qos=1)
+    # aclient.publish(TOPICS[0], b"qos 2", qos=2) # Mosquitto error
     await asyncio.sleep(1)
-    assert len(callback2.messages) == 3
+    assert len(callback2.messages) == 2
