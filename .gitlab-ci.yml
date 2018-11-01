@@ -3,6 +3,7 @@ image: python:3.6-alpine
 stages:
   - build
   - test
+  - pages
   - deploy
 
 build_package:
@@ -44,8 +45,7 @@ pages:
         - mkdir -p public/coverage
         - cp -fr htmlcov/* public/coverage/
     dependencies:
-        - coverage
-        - apidoc
+        - test_package
     artifacts:
         paths:
             - public
