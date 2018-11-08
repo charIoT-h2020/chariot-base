@@ -75,7 +75,7 @@ def test_encrypt():
 
     secret = 'κατι πολυ κρυφο'  # UTF checking
     message = key_store.encrypt(secret)
-    assert len(message) == 120
+    assert len(message) == 136
 
 
 def test_decrypt():
@@ -87,3 +87,29 @@ def test_decrypt():
     secret = 'κατι πολυ κρυφο'  # UTF checking
     message = key_store.encrypt(secret)
     assert key_store.decrypt(message).decode() == secret
+
+
+def test_sign():
+    key_store = generate_new_keypair()
+    message = 'very secret thing'
+    s = key_store.sign(message)
+    assert len(s) == 88
+
+    message = 'κατι πολυ κρυφο'  # UTF checking
+    s = key_store.sign(message)
+    assert len(s) == 88
+
+
+def test_verify():
+    key_store = generate_new_keypair()
+    message = 'very secret thing'
+    s = key_store.sign(message)
+    assert key_store.verify(message, s) is True
+
+    message = 'κατι πολυ κρυφο'  # UTF checking
+    s = key_store.sign(message)
+    assert key_store.verify(message, s) is True
+
+    message = '早上好'  # Good morning in Mandarin Chinese
+    s = key_store.sign(message)
+    assert key_store.verify(message, s) is True

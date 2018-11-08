@@ -22,7 +22,7 @@ BASE_CURVE = curve.P256
 
 def generate_new_keypair(curve=BASE_CURVE):
     priv_key, pub_key = keys.gen_keypair(curve)
-    return KeyPair(pub_key, priv_key)
+    return KeyPair(pub_key, priv_key, curve)
 
 
 def pad(message, block_size):
@@ -168,15 +168,32 @@ def decode_point(point, curve=BASE_CURVE):
 
 
 class KeyPair:
-    def __init__(self, public_key, private_key):
+    def __init__(self, public_key, private_key, curve=BASE_CURVE):
         self.public_key = public_key
         self.private_key = private_key
+        self.curve = curve
 
     def sign(self, message):
-        return ecdsa.sign(message, self.private_key)
+        r, s = ecdsa.sign(message, self.private_key)
+        return self.encode_signature(r, s)
 
-    def verify(self, message, r, s):
+    def verify(self, message, r_s):
+        r, s = self.decode_signature(r_s)
         return ecdsa.verify((r, s), message, self.public_key)
+
+    def encode_signature(self, r, s):
+        length = orderlen(self.curve.q)
+        fmt_str = "%0" + str(2 * length) + "x"
+        s = binascii.unhexlify((fmt_str % s).encode())
+        r = binascii.unhexlify((fmt_str % r).encode())
+        return base64.b64encode(r + s)
+
+    def decode_signature(self, r_s):
+        s_decoded = base64.b64decode(r_s)
+        base_length = orderlen(self.curve.q)
+        r = int(binascii.hexlify(s_decoded[:base_length]), 16)
+        s = int(binascii.hexlify(s_decoded[base_length:]), 16)
+        return r, s
 
     def decrypt(self, message, curve=BASE_CURVE):
         R_size = 1 + orderlen(curve.q)
