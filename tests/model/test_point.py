@@ -5,7 +5,7 @@
 
 import pytest
 
-from chariot_base.model import DataPoint, DataPointFactory
+from chariot_base.model import DataPointFactory
 
 
 class MqttMessage:
