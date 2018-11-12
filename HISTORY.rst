@@ -1,14 +1,14 @@
-
-n.n.n / 2018-11-12
+0.2.0 / 2018-11-12
 ==================
 
-  * ✅💥Pass connection options to cloudant data storage
-  * ✅💥Pass connection options to watson connector
-  * ✅💥🏗 Modify how I write to the local storage
-  * ✅Add test for data point
-  * Add test for sign & verify
-  * Custom (Integrated Encryption Scheme) IES encrypt/decrypt
-  * Bitwise permission checking
+* ✅💥Pass connection options to cloudant data storage
+* ✅💥Pass connection options to watson connector
+* ✅💥🏗 Modify how I write to the local storage
+* ✅Add test for data point
+* Add test for sign & verify
+* Custom (Integrated Encryption Scheme) IES encrypt/decrypt
+* Bitwise permission checking
+
 =======
 History
 =======
