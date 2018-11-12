@@ -30,6 +30,13 @@ def test_unpad():
     msg = pad("test", 4)
     assert unpad(msg, 4) == "test"
 
+    assert unpad("", 4) == ""
+    assert unpad("0000", 4) == "0000"
+    assert unpad("000", 4) == "000"
+    assert unpad(b"", 4) == b""
+    assert unpad(b"0000", 4) == b"0000"
+    assert unpad(b"000", 4) == b"000"
+
     msg = unpad(b'very secret thing\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f\x0f', 16)
     assert msg == b'very secret thing'
 
