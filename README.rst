@@ -13,6 +13,13 @@ Base utilities for chariot micro-services.
 * Free software: Eclipse Public License 1.0
 * Documentation: https://chariot-northbound-dispatcher.readthedocs.io.
 
+Development
+-----------
+
+```
+sudo apt-get install python-dev libgmp3-dev
+```
+
 Features
 --------
 

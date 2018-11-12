@@ -1,5 +1,9 @@
 image: python:3.6-alpine
 
+services:
+  - eclipse-mosquitto
+  - influxdb:1.5.4-alpine
+
 stages:
   - build
   - test
