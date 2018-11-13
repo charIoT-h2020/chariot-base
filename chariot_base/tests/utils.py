@@ -6,10 +6,13 @@ import asyncio
 import gmqtt
 import logging
 
+from chariot_base.connector import LocalConnector
 
-class Callbacks:
+
+class Callbacks(LocalConnector):
 
     def __init__(self):
+        super().__init__()
         self.messages = []
         self.messagedicts = []
         self.unsubscribeds = []
@@ -25,32 +28,16 @@ class Callbacks:
         return str(self.messages) + str(self.messagedicts) + str(self.publisheds) + \
                str(self.subscribeds) + str(self.unsubscribeds) + str(self.disconnected)
 
-    def clear(self):
-        self.__init__()
-
-    def on_disconnect(self, client, packet):
-        logging.info('[DISCONNECTED {}]'.format(client._client_id))
-        self.disconnected = True
-
     def on_message(self, client, topic, payload, qos, properties):
+        super().on_message(client, topic, payload, qos, properties)
         logging.info('[RECV MSG {}] TOPIC: {} PAYLOAD: {} QOS: {} PROPERTIES: {}'
                      .format(client._client_id, topic, payload, qos, properties))
         self.messages.append((topic, payload, qos, properties))
 
     def on_subscribe(self, client, mid, qos):
+        super().on_subscribe(client, mid, qos)
         logging.info('[SUBSCRIBED {}] QOS: {}'.format(client._client_id, qos))
         self.subscribeds.append(mid)
-
-    def on_connect(self, client, flags, rc, properties):
-        logging.info('[CONNECTED {}]'.format(client._client_id))
-        self.connected = True
-        self.connack = (flags, rc, properties)
-
-    def register_for_client(self, client):
-        client.on_disconnect = self.on_disconnect
-        client.on_message = self.on_message
-        client.on_connect = self.on_connect
-        client.on_subscribe = self.on_subscribe
 
 
 async def clean_retained(host, port, username, password=None):
@@ -84,4 +71,3 @@ async def cleanup(host, port=1883, username=None, password=None, client_ids=None
     # clean retained messages
     await clean_retained(host, port, username, password=password)
 
-print("clean up finished")

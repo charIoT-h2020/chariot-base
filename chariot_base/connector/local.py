@@ -1,30 +1,41 @@
-import paho.mqtt.client as mqtt
-
-mqtt.Client.connected_flag = False
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 
 class LocalConnector(object):
-    def __init__(self, client_od, broker):
-        self.consumer = mqtt.Client(client_od)
-        self.consumer.connect(broker)
+    def __init__(self):
+        self.connack = None
+        self.client = None
 
-        self.consumer.on_log = self.on_log
-        self.consumer.on_message = self.on_message
+        self.disconnected = False
+        self.connected = False
 
-    def on_message(self, client, userdata, message):
+    def clear(self):
+        self.__init__()
+
+    def subscribe(self, topic, qos=1):
+        self.client.subscribe(topic, qos=qos)
+
+    def publish(self, topic, msg, qos=1):
+        self.client.publish(topic, msg, qos=qos)
+
+    def on_message(self, client, topic, payload, qos, properties):
         pass
 
-    def on_log(self, client, userdata, level, buf):
+    def on_subscribe(self, client, mid, qos):
         pass
 
-    def subscribe(self, topic):
-        self.consumer.subscribe(topic)
+    def on_disconnect(self, client, packet):
+        self.disconnected = True
 
-    def publish(self, topic, msg):
-        self.consumer.publish(topic, msg)
+    def on_connect(self, client, flags, rc, properties):
+        self.connected = True
+        self.connack = (flags, rc, properties)
 
-    def start(self, forever=True):
-        if forever:
-            self.consumer.loop_forever()
-        else:
-            self.consumer.loop_start()
+    def register_for_client(self, client):
+        client.on_disconnect = self.on_disconnect
+        client.on_message = self.on_message
+        client.on_connect = self.on_connect
+        client.on_subscribe = self.on_subscribe
+
+        self.client = client
