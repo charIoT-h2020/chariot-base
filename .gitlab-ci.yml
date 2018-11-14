@@ -1,9 +1,5 @@
 image: python:3.6-alpine
 
-services:
-  - eclipse-mosquitto
-  - influxdb:1.5.4-alpine
-
 stages:
   - build
   - test
@@ -24,6 +20,11 @@ build_package:
 
 test_package:
   stage: test
+  services:
+  - name: eclipse-mosquitto
+    alias: mosquitto
+  - name: influxdb:1.5.4-alpine
+    alias: influxdb
   script:
     - apk add gnupg gcc g++ make python3-dev libffi-dev openssl-dev gmp-dev
     - gpg --batch --passphrase $TEST_CONFIG_PASSPHRASE -o tests/config.json tests/config.json.gpg
