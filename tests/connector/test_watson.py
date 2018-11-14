@@ -1,29 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import json
 import pytest
 
 from chariot_base.model import DataPointFactory
 from chariot_base.connector import WatsonConnector
 
+OPTS = json.load(open('tests/config.json', 'r'))
+options = OPTS['iot']
+
 
 @pytest.fixture()
 async def init_clients():
-    options_first = {
-        "org": "jv8w5u",
-        "type": "gateway",
-        "id": "testing",
-        "auth-method": "token",
-        "auth-token": "Q(lB@aTQ+hm@AVrdw!",
-    }
+    options_first = options['client1']
 
-    options_second = {
-        "org": "jv8w5u",
-        "type": "gateway",
-        "id": "5410ec4d1601",
-        "auth-method": "token",
-        "auth-token": "Mw35yK?VRvsb-Qqjy3"
-    }
+    options_second = options['client2']
 
     yield WatsonConnector(options_first), WatsonConnector(options_second), DataPointFactory('fog_logs', 'message')
 
@@ -32,7 +24,7 @@ def test_error():
     options_first = {
         "org": "jv8w5u",
         "type": "gateway",
-        "id": "testing",
+        "id": "fault",
         "auth-method": "token",
         "auth-token": "fault",
     }
