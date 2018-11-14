@@ -1,4 +1,4 @@
-0.2.0 / 2018-11-12
+0.2.3 / 2018-11-12
 ==================
 
 * ✅💥Pass connection options to cloudant data storage
