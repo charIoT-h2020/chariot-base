@@ -20,6 +20,11 @@ Development
 sudo apt-get install python-dev libgmp3-dev
 ```
 
+Encrypt application secrets
+```
+gpg -c --batch --passphrase test config.json
+```
+
 Features
 --------
 

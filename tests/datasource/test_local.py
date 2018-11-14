@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import json
 import pytest
 
 from chariot_base.datasource import LocalDataSource
@@ -8,10 +9,13 @@ from chariot_base.model import DataPointFactory
 
 from ..model.test_point import MqttMessage
 
+OPTS = json.load(open('tests/config.json', 'r'))
+options = OPTS['local_storage']
+
 
 @pytest.fixture(scope='module')
 def init_data_source():
-    db = LocalDataSource('192.168.2.24', 8086, 'root', 'root', 'test_db')
+    db = LocalDataSource(options['host'], options['port'], options['username'], options['password'], 'test_db')
     point_factory = DataPointFactory('test_db', 'message')
     yield db,  point_factory
     db.db.drop_database('test_db')

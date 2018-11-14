@@ -2,15 +2,18 @@
 # -*- coding: utf-8 -*-
 
 import asyncio
-
+import json
 import gmqtt
 import pytest
 
 from chariot_base.tests import Callbacks, cleanup
 
-host = 'iot.eclipse.org'
-port = 1883
-username = ''
+OPTS = json.load(open('tests/config.json', 'r'))
+options = OPTS['mosquitto']
+
+host = options['host']
+port = options['port']
+username = options['username']
 
 TOPICS = ("TopicA", "TopicA/B", "TopicA/C", "TopicA/D", "/TopicA")
 WILDTOPICS = ("TopicA/+", "+/C", "#", "/#", "/+", "+/+", "TopicA/#")
