@@ -2,15 +2,13 @@
 # -*- coding: utf-8 -*-
 
 import pytest
+import json
 
 from chariot_base.datasource import CloudDataSource
 from chariot_base.model import DataPointFactory
 
-options = {
-    "apikey": "vjg5C8qxZGMooDKoWF68u5omPT5rYEGfOSc91aCoZXjC",
-    "username": "56aa8c21-34f5-4e63-bf88-cf1ed1f94442-bluemix",
-    "orgId": "jv8w5u"
-}
+OPTS = json.load(open('tests/config.json', 'r'))
+options = OPTS['cloudant']
 
 
 @pytest.fixture(scope='module')
@@ -33,3 +31,9 @@ def test_get_last(init_data_source):
 
     point = db.get_last('not_exist')
     assert point is None
+
+
+def test_get_all_databases(init_data_source):
+    db, point_factory = init_data_source
+
+    assert len(db.get_all_database()) > 0

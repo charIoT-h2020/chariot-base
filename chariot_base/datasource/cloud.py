@@ -16,7 +16,7 @@ class CloudDataSource(object):
         :param device_id: name of the sensor
         :return: timestamp and value in json format.
         """
-        current_date = datetime.strftime(datetime.now(), '%Y-%m-%d')
+        current_date = datetime.strftime(datetime.now(), '%Y-%m-%d')  # 2018-11-10
         self.my_database = self.cloudant_client['iotp_%s_default_%s' % (self.orgId, current_date)]
 
         if device_id is None:
@@ -34,3 +34,6 @@ class CloudDataSource(object):
             return result_collection[0][0]['data']
         else:
             return None
+
+    def get_all_database(self):
+        return self.cloudant_client.all_dbs()
