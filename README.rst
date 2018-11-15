@@ -16,14 +16,17 @@ Base utilities for chariot micro-services.
 Development
 -----------
 
-```
-sudo apt-get install python-dev libgmp3-dev
-```
+.. code-block:: bash
 
-Encrypt application secrets
-```
-gpg -c --batch --passphrase test config.json
-```
+ $ sudo apt-get install python-dev libgmp3-dev
+
+
+Encrypt application secrets, with the folling command
+
+.. code-block:: bash
+ 
+ $ gpg -c --batch --passphrase test config.json
+
 
 Features
 --------
