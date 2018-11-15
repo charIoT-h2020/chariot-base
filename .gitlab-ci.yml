@@ -42,7 +42,7 @@ docs:
   before_script:
     - "true"
   script:
-    - apk add gcc g++ make libffi-dev openssl-dev
+    - apk add gcc g++ make libffi-dev openssl-dev gmp-dev
     - pip install -r requirements_dev.txt
     - python setup.py install
     - cd docs
