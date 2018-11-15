@@ -44,6 +44,7 @@ docs:
   script:
     - apk add gcc g++ make libffi-dev openssl-dev
     - pip install -r requirements_dev.txt
+    - python setup.py install
     - cd docs
     - make html
     - cp -fr docs/_build public
