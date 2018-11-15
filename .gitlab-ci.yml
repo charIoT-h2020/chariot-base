@@ -45,6 +45,7 @@ docs:
     - apk add gcc g++ make libffi-dev openssl-dev
     - pip install -r requirements_dev.txt
     - cd docs
+    - make html
     - cp -fr docs/_build public
   artifacts:
     paths:
