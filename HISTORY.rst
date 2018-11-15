@@ -1,5 +1,9 @@
-0.2.3 / 2018-11-12
-==================
+=========
+Changelog
+=========
+
+0.2.3  (2018-11-12)
+===================
 
 * ✅💥Pass connection options to cloudant data storage
 * ✅💥Pass connection options to watson connector
@@ -9,23 +13,22 @@
 * Custom (Integrated Encryption Scheme) IES encrypt/decrypt
 * Bitwise permission checking
 
-=======
 History
 =======
 
-0.1.10 / 2018-10-01
-------------------
+0.1.10 (2018-10-01)
+-------------------
 
 * Add connector
 * Update model
 * Add various data source utilities
 
-0.1.1 / 2018-10-01
+0.1.1 (2018-10-01)
 ------------------
 
 * Add common model files
 
-0.1.0 / 2018-09-28
+0.1.0 (2018-09-28)
 ------------------
 
 * First release on GitLab.

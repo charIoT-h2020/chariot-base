@@ -40,7 +40,13 @@ Or download the `tarball`_:
 
     $ curl  -OL https://gitlab.com/chariot-h2020/chariot_base/-/archive/master/chariot_base-master.zip
 
-Once you have a copy of the source, you can install it with:
+Then install requirements for a Debian like system, with the following command:
+
+.. code-block:: console
+
+ $ sudo apt-get install python-dev libgmp3-dev
+
+Once you have a copy of the source and requirement are installed, you can install it with:
 
 .. code-block:: console
 

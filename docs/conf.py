@@ -49,7 +49,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Chariot Base'
-copyright = u"2018, George Theofilis"
+copyright = u"2018, CLMS"
 author = u"George Theofilis"
 
 # The version info for the project you're documenting, acts as replacement
