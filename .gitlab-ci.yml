@@ -47,7 +47,7 @@ docs:
     - python setup.py install
     - cd docs
     - make html
-    - cp -fr docs/_build public
+    - cp -fr _build ../public
   artifacts:
     paths:
       - public
