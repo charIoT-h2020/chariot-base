@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import uuid
+import gmqtt
+
 
 class LocalConnector(object):
     def __init__(self):
@@ -39,3 +42,12 @@ class LocalConnector(object):
         client.on_subscribe = self.on_subscribe
 
         self.client = client
+
+
+async def create_client(options, postfix='_client'):
+    client_id = '%s%s' % (uuid.uuid4(), postfix)
+  
+    client = gmqtt.Client(client_id, clean_session=True)
+    await client.connect(host=options['host'], port=options['port'], version=4)
+
+    return client
