@@ -22,7 +22,6 @@ requirements = [
     'fastecdsa',
     'ecdsa',
     'pycrypto',
-    'logging',
     'jaeger-client',
     'pytest-asyncio'
 ]
