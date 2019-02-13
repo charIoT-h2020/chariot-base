@@ -1,5 +1,6 @@
 import logging
 from jaeger_client import Config
+from opentracing import Format
 
 
 class Tracer(object):
@@ -29,3 +30,18 @@ class Tracer(object):
         )
 
         self.tracer = config.initialize_tracer()
+
+    def inject(self, span, msg):
+        d = {}
+        self.tracer.inject(span.context, Format.TEXT_MAP, d)
+        msg['uber-trace-id'] = d['uber-trace-id']
+        return msg
+
+    def extract(self, msg):
+        d = {
+            'uber-trace-id': msg['uber-trace-id']
+        }
+        return self.tracer.extract(Format.TEXT_MAP, d)
+
+    def close(self):
+        self.tracer.close()
