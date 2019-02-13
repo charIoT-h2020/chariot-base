@@ -3,12 +3,14 @@
 
 import uuid
 import gmqtt
+from ..utilities import Tracer
 
 
 class LocalConnector(object):
     def __init__(self):
         self.connack = None
         self.client = None
+        self.tracer = None
 
         self.disconnected = False
         self.connected = False
@@ -42,6 +44,27 @@ class LocalConnector(object):
         client.on_subscribe = self.on_subscribe
 
         self.client = client
+
+    def inject_tracer(self, tracer):
+        self.tracer = tracer
+
+    def set_up_tracer(self, options):
+        self.tracer = Tracer(options)
+        self.tracer.init_tracer()
+
+    def start_span(self, id, child_span=None):
+        if self.tracer is None:
+            return
+
+        if child_span is None:
+            return self.tracer.tracer.start_span(id)
+        else:
+            return self.tracer.tracer.start_span(id, child_of=child_span)
+
+    def close_span(self, span):
+        if self.tracer is None:
+            return
+        span.finish()
 
 
 async def create_client(options, postfix='_client'):
