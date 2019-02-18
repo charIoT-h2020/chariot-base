@@ -24,7 +24,7 @@ class Tracer(object):
                     'reporting_host': self.host,
                     'reporting_port': self.port
                 },
-                'logging': True,
+                'logging': False,
             },            
             service_name=self.name,
         )
