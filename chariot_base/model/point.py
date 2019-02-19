@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import uuid
 import datetime
 
 
@@ -25,6 +26,7 @@ class DataPointFactory(object):
 
 class DataPoint(object):
     def __init__(self, db, table, message):
+        self.id = uuid.uuid4()
         self.db = db
         self.table = table
         self.message = message
