@@ -37,38 +37,38 @@ build_package:
   only:
     - tags
 
-docs:
-  stage: deploy
-  before_script:
-    - "true"
-  script:
-    - apk add gcc g++ make libffi-dev openssl-dev gmp-dev
-    - pip install -r requirements_dev.txt
-    - python setup.py install
-    - cd docs
-    - make html
-    - cp -fr _build ../public
-  artifacts:
-    paths:
-      - public
-  only:
-    - tags
-    - master
+# docs:
+#   stage: deploy
+#   before_script:
+#     - "true"
+#   script:
+#     - apk add gcc g++ make libffi-dev openssl-dev gmp-dev
+#     - pip install -r requirements_dev.txt
+#     - python setup.py install
+#     - cd docs
+#     - make html
+#     - cp -fr _build ../public
+#   artifacts:
+#     paths:
+#       - public
+#   only:
+#     - tags
+#     - master
 
-pages:
-  stage: deploy
-  before_script:
-    - "true"
-  script:
-    - mkdir -p public/coverage
-    - cp -fr htmlcov/* public/coverage/
-  dependencies:
-    - test_package
-  artifacts:
-    paths:
-      - public
-  only:
-    - tags
+# pages:
+#   stage: deploy
+#   before_script:
+#     - "true"
+#   script:
+#     - mkdir -p public/coverage
+#     - cp -fr htmlcov/* public/coverage/
+#   dependencies:
+#     - test_package
+#   artifacts:
+#     paths:
+#       - public
+#   only:
+#     - tags
 
 deploy_production:
   stage: deploy
