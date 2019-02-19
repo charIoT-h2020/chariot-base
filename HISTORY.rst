@@ -2,6 +2,17 @@
 Changelog
 =========
 
+0.5.0  (2019-02-19)
+===================
+
+* Each data point gets a random guid.
+* Add support for distributed tracing.
+* Read JSON configuration.
+* Migrate to gmqtt, drop use of python-mqtt.
+
+History
+=======
+
 0.2.3  (2018-11-12)
 ===================
 
@@ -12,9 +23,6 @@ Changelog
 * Add test for sign & verify
 * Custom (Integrated Encryption Scheme) IES encrypt/decrypt
 * Bitwise permission checking
-
-History
-=======
 
 0.1.10 (2018-10-01)
 -------------------
