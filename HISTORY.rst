@@ -2,6 +2,14 @@
 Changelog
 =========
 
+0.5.3  (2019-02-25)
+===================
+
+* Add IoTLWrapper
+
+History
+=======
+
 0.5.0  (2019-02-19)
 ===================
 
@@ -9,9 +17,6 @@ Changelog
 * Add support for distributed tracing.
 * Read JSON configuration.
 * Migrate to gmqtt, drop use of python-mqtt.
-
-History
-=======
 
 0.2.3  (2018-11-12)
 ===================
