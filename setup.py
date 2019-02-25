@@ -23,7 +23,12 @@ requirements = [
     'ecdsa',
     'pycrypto',
     'jaeger-client',
-    'pytest-asyncio'
+    'pytest-asyncio', 
+    'iotl',
+]
+
+dependency_links = [
+    'git+ssh://git@gitlab.com/chariot-h2020/iot-modeling-language.git#egg=iotl-0.106'
 ]
 
 setup_requirements = [ ]
@@ -43,6 +48,7 @@ setup(
     ],
     description="Chariot base micro-service",
     install_requires=requirements,
+    dependency_links=dependency_links,
     license="EPL-1.0",
     long_description=readme + '\n\n' + history,
     long_description_content_type="text/x-rst",
