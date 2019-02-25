@@ -7,15 +7,18 @@ class Alert(object):
     """
     Describe each alert raised by Chariot
     """
-    def __init__(self, msg=None, severity=100):
+    def __init__(self, name, msg=None, severity=100):
         self.timestamp = datetime.datetime.now().isoformat()
+        self.name = name
         self.message = msg
         self.severity = severity
 
     def dict(self):
         return {
+            'name': self.name,
             'message': self.message,
-            'severity': self.severity
+            'severity': self.severity,
+            'timestamp': self.timestamp
         }
 
     def __str__(self):
