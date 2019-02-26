@@ -12,10 +12,12 @@ class Alert(object):
         self.name = name
         self.message = msg
         self.severity = severity
+        self.sensor_id = None
 
     def dict(self):
         return {
             'name': self.name,
+            'sensor_id': self.sensor_id
             'message': self.message,
             'severity': self.severity,
             'timestamp': self.timestamp
