@@ -16,4 +16,7 @@ class IoTLWrapper(object):
         return self.IoTState.params[sensor_id]['privacySensitive'] == 1
 
     def acl(self, sensor_id):
-        return self.IoTState.acl[sensor_id] 
+        try:
+            return self.IoTState.acl[sensor_id]
+        except KeyError:
+            return []
