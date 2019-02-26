@@ -28,10 +28,10 @@ def test_severity():
 def test_severity_string():
     alert = Alert('topology', 'Message', 70)
     alert.timestamp = '2019-02-25T16:03:33.474156'
-    assert(str(alert) == '{"name": "topology", "message": "Message", "severity": "70", "timestamp": "2019-02-25T16:03:33.474156"}')
+    assert(str(alert) == '{"name": "topology", "message": "Message", "severity": 70, "timestamp": "2019-02-25T16:03:33.474156"}')
 
 
 def test_severity_unicode():
     alert = Alert('topology', 'Message', 70)
     alert.timestamp = '2019-02-25T16:03:33.474156'
-    assert(alert.__unicode__() == '{"name": "topology", "message": "Message", "severity": "70", "timestamp": "2019-02-25T16:03:33.474156"}')
+    assert(alert.__unicode__() == '{"name": "topology", "message": "Message", "severity": 70, "timestamp": "2019-02-25T16:03:33.474156"}')
