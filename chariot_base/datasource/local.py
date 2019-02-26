@@ -15,7 +15,7 @@ class LocalDataSource(object):
                 'measurement': point.table,
                 'tags': {
                     'topic': point.topic,
-                    'id': 'gateway_5410ec4d1601'
+                    'sensor_id': point.sensor_id
                 },
                 'time': point.timestamp,
                 'fields': point.message

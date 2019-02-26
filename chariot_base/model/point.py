@@ -32,6 +32,7 @@ class DataPoint(object):
         self.message = message
         self.timestamp = datetime.datetime.now().isoformat()
         self.topic = None
+        self.sensor_id = None
 
     def _event_type(self):
         if self.topic is None:
