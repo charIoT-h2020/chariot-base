@@ -17,7 +17,7 @@ class Alert(object):
     def dict(self):
         return {
             'name': self.name,
-            'sensor_id': self.sensor_id
+            'sensor_id': self.sensor_id,
             'message': self.message,
             'severity': self.severity,
             'timestamp': self.timestamp
