@@ -1,4 +1,3 @@
-import logging
 from jaeger_client import Config
 from opentracing import Format
 
@@ -11,9 +10,6 @@ class Tracer(object):
         self.tracer = None
 
     def init_tracer(self):
-        logging.getLogger('').handlers = []
-        logging.basicConfig(format='%(message)s', level=logging.DEBUG)
-
         config = Config(
             config={
                 'sampler': {
