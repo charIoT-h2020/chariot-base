@@ -30,7 +30,7 @@ class DataPoint(object):
         self.db = db
         self.table = table
         self.message = message
-        self.timestamp = datetime.datetime.now().isoformat()
+        self.timestamp = datetime.datetime.utcnow().isoformat()
         self.topic = None
         self.sensor_id = None
 

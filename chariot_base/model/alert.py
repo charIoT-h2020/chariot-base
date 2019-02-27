@@ -8,7 +8,7 @@ class Alert(object):
     Describe each alert raised by Chariot
     """
     def __init__(self, name, msg=None, severity=100):
-        self.timestamp = datetime.datetime.now().isoformat()
+        self.timestamp = datetime.datetime.utcnow().isoformat()
         self.name = name
         self.message = msg
         self.severity = severity
