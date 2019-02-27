@@ -7,26 +7,24 @@ import logging.config
 
 
 default_logging = {
-    "logging": {
-        "version": 1,
-        "handlers": {            
-            "console": {
-                "class": "logging.StreamHandler",
-                "formatter": "console"
-            }
-        },
-        "loggers": {            
-        },
-        "root": {
-            "level": "INFO",
-            "handlers": [
-                "console"
-            ]
-        },
-        "formatters": {
-            "console": {
-                "format": "%(asctime)s (%(levelname)s) %(name)s : %(message)s"
-            }
+    "version": 1,
+    "handlers": {            
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "console"
+        }
+    },
+    "loggers": {            
+    },
+    "root": {
+        "level": "INFO",
+        "handlers": [
+            "console"
+        ]
+    },
+    "formatters": {
+        "console": {
+            "format": "%(asctime)s (%(levelname)s) %(name)s : %(message)s"
         }
     }
 }
