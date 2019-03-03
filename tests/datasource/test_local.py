@@ -11,6 +11,7 @@ from ..model.test_point import MqttMessage
 
 OPTS = json.load(open('tests/config.json', 'r'))
 options = OPTS['local_storage']
+fixed_good_message = '{"52-80-6c-75-c3-fd": {"fixedIO": {"din0": 1}}}'
 
 
 @pytest.fixture(scope='module')
@@ -24,10 +25,10 @@ def init_data_source():
 def test_q_write(init_data_source):
     data_source, point_factory = init_data_source
 
-    point = point_factory.from_mqtt_message(MqttMessage('abc/def', '{"d": {"din0": 0}}'), 'd')
+    point = point_factory.from_mqtt_message(MqttMessage('abc/def', fixed_good_message)
     assert data_source.publish(point) is True
 
-    point = point_factory.from_mqtt_message(MqttMessage('abc/def', '{"d": {"din0": 1}}'), 'd')
+    point = point_factory.from_mqtt_message(MqttMessage('abc/def', fixed_good_message)
     assert data_source.publish(point) is True
 
     logs = data_source.query('SELECT * FROM message', None).get_points('message')
