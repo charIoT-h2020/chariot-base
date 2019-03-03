@@ -6,6 +6,8 @@ import datetime
 
 FIXEDIO = 'fixedIO'
 WIFI = 'wifi'
+SENSORDATA = 'sensorData'
+SENSORVALUES = 'sensorValues'
 
 class DataPointFactory(object):
     def __init__(self, db, table):
@@ -25,7 +27,7 @@ class DataPointFactory(object):
                 decoded_msg = message[FIXEDIO]
             elif WIFI in message:
                 obj = {}
-                for values in message[WIFI]['sensorData']['sensorValues']:
+                for values in message[WIFI][SENSORDATA][SENSORVALUES]:
                     obj[values['name']] = values['value']
                 decoded_msg = obj
             else:
