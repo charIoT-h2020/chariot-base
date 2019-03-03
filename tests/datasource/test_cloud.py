@@ -22,12 +22,10 @@ def test_get_last(init_data_source):
     db, point_factory = init_data_source
 
     point = db.get_last('gateway')
-    assert point['din0'] == 0.0
-    assert point['din1'] == 1.0
+    assert point['din0'] == 1.0
 
     point = db.get_last('gateway', '5410ec4d1601')
-    assert point['din0'] == 0.0
-    assert point['din1'] == 1.0
+    assert point['din0'] == 1.0
 
     point = db.get_last('not_exist')
     assert point is None
