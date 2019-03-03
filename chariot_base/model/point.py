@@ -4,24 +4,33 @@ import uuid
 import datetime
 
 
+FIXEDIO = 'fixedIO'
+WIFI = 'wifi'
+
 class DataPointFactory(object):
     def __init__(self, db, table):
         self.db = db
         self.table = table
 
-    def from_mqtt_message(self, message, attribute_name=None):
+    def from_mqtt_message(self, message):
         msg = message.payload.decode('utf-8')
-        message_parsed = self.from_json_string(msg, attribute_name)
+        message_parsed = self.from_json_string(msg)
         message_parsed.topic = message.topic
         return message_parsed
 
-    def from_json_string(self, msg, attribute_name=None):
+    def from_json_string(self, msg):
         decoded_msg = json.loads(msg)
-        if attribute_name is None:
-            message_payload = decoded_msg
-        else:
-            message_payload = decoded_msg[attribute_name]
-        return DataPoint(self.db, self.table, message_payload)
+        for key, message in decoded_msg.items():
+            if FIXEDIO in message:
+                decoded_msg = message[FIXEDIO]
+            elif WIFI in message:
+                obj = {}
+                for values in message[WIFI]['sensorData']['sensorValues']:
+                    obj[values['name']] = values['value']
+                decoded_msg = obj
+            else:
+                raise Exception('Message format is not recognized')
+        return DataPoint(self.db, self.table, decoded_msg)
 
 
 class DataPoint(object):
