@@ -7,6 +7,9 @@ from ..utilities import Tracer
 
 
 class LocalConnector(object):
+    """
+    All subscribers/publisers at Chariot project should extend this class
+    """
     def __init__(self):
         self.connack = None
         self.client = None
@@ -19,12 +22,33 @@ class LocalConnector(object):
         self.__init__()
 
     def subscribe(self, topic, qos=1):
+        """
+        Subscribe to a topic
+        
+        :param topic: Which topic the subscriber should listen for new message.
+        :param qos: MQTT broker quality of service
+        """
         self.client.subscribe(topic, qos=qos)
 
     def publish(self, topic, msg, qos=1):
+        """
+        Publish to a topic
+
+        :param msg: the published message
+        :param qos: MQTT broker quality of service
+        """
         self.client.publish(topic, msg, qos=qos)
 
     def on_message(self, client, topic, payload, qos, properties):
+        """
+        Handler for new message
+
+        :param client: the subscribed MQTT client
+        :param topic: the MQTT topic
+        :param payload: the message 
+        :param qos: MQTT broker quality of service
+        :param properties: Custom properties
+        """
         pass
 
     def on_subscribe(self, client, mid, qos):
@@ -46,13 +70,29 @@ class LocalConnector(object):
         self.client = client
 
     def inject_tracer(self, tracer):
+        """
+        Inject an opentracing client
+
+        :param tracer: the opentracing client 
+        """
         self.tracer = tracer
 
     def set_up_tracer(self, options):
+        """
+        Configure a new opentracing client
+
+        :param options: options to configure the new client
+        """
         self.tracer = Tracer(options)
         self.tracer.init_tracer()
 
     def start_span(self, id, child_span=None):
+        """
+        Start a new logging span
+
+        :param id: identifier of a new logging span
+        :param child_span: parent span
+        """
         if self.tracer is None:
             return
 

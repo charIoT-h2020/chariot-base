@@ -15,7 +15,7 @@ class WatsonConnector(Process):
 
     def publish(self, point):
         """
-        :param point: point
-        :return:
+        :param point: A point represent received message.
+        :return: True if event publish is successfull.
         """
         return self.iot_client.publishGatewayEvent(event=point.table, msgFormat="json", data=point.message)
