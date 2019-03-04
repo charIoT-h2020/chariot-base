@@ -8,10 +8,10 @@ Welcome to Chariot Base documentation!
    readme
    installation
    usage
-   modules
    contributing
-   authors
    history
+   authors
+   modules
 
 Indices and tables
 ==================

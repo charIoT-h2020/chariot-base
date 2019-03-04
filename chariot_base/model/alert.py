@@ -15,6 +15,9 @@ class Alert(object):
         self.sensor_id = None
 
     def dict(self):
+        """
+        Converts alert object to dictionary
+        """
         return {
             'name': self.name,
             'sensor_id': self.sensor_id,
