@@ -6,7 +6,7 @@ import gmqtt
 from ..utilities import Tracer
 
 
-class LocalConnector(object):
+class LocalConnector:
     """
     All subscribers/publisers at Chariot project should extend this class
     """
@@ -19,12 +19,15 @@ class LocalConnector(object):
         self.connected = False
 
     def clear(self):
+        """
+        Reinitialize the connector
+        """
         self.__init__()
 
     def subscribe(self, topic, qos=1):
         """
         Subscribe to a topic
-        
+
         :param topic: Which topic the subscriber should listen for new message.
         :param qos: MQTT broker quality of service
         """
@@ -45,11 +48,10 @@ class LocalConnector(object):
 
         :param client: the subscribed MQTT client
         :param topic: the MQTT topic
-        :param payload: the message 
+        :param payload: the message
         :param qos: MQTT broker quality of service
         :param properties: Custom properties
         """
-        pass
 
     def on_subscribe(self, client, mid, qos):
         """
@@ -59,7 +61,6 @@ class LocalConnector(object):
         :param mid:
         :param qos: MQTT broker quality of service
         """
-        pass
 
     def on_disconnect(self, client, packet):
         """
@@ -99,7 +100,7 @@ class LocalConnector(object):
         """
         Inject an opentracing client
 
-        :param tracer: the opentracing client 
+        :param tracer: the opentracing client
         """
         self.tracer = tracer
 
@@ -112,25 +113,25 @@ class LocalConnector(object):
         self.tracer = Tracer(options)
         self.tracer.init_tracer()
 
-    def start_span(self, id, child_span=None):
+    def start_span(self, span_id, child_span=None):
         """
         Start a new logging span
 
-        :param id: identifier of a new logging span
+        :param span_id: identifier of a new logging span
         :param child_span: parent span
         """
         if self.tracer is None:
-            return
+            return None
 
         if child_span is None:
-            return self.tracer.tracer.start_span(id)
-        else:
-            return self.tracer.tracer.start_span(id, child_of=child_span)
+            return self.tracer.tracer.start_span(span_id)
+        
+        return self.tracer.tracer.start_span(span_id, child_of=child_span)
 
     def close_span(self, span):
         """
         Close a logging span
-        
+
         :param span: Span to close
         """
         if self.tracer is None:
@@ -146,7 +147,7 @@ async def create_client(options, postfix='_client'):
     :para postfix: Unique postfix for the client
     """
     client_id = '%s%s' % (uuid.uuid4(), postfix)
-  
+
     client = gmqtt.Client(client_id, clean_session=True)
     await client.connect(host=options['host'], port=options['port'], version=4)
 
