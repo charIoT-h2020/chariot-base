@@ -22,26 +22,37 @@ class DataPointFactory(object):
         From mosquitto message payload
         """
         msg = message.payload.decode('utf-8')
-        message_parsed = self.from_json_string(msg)
-        message_parsed.topic = message.topic
-        return message_parsed
+        messages_parsed = self.from_json_string(msg)
+
+        i = 0
+        for message_parsed in messages_parsed:
+            messages_parsed[i].topic = message.topic
+            i = i + 1
+
+        return messages_parsed
 
     def from_json_string(self, msg):
         """
         From JSON message payload
         """
         decoded_msg = json.loads(msg)
+        messages = []
         for key, message in decoded_msg.items():
+            parsed_msg = None
             if FIXEDIO in message:
-                decoded_msg = message[FIXEDIO]
+                parsed_msg = message[FIXEDIO]
             elif WIFI in message:
                 obj = {}
                 for values in message[WIFI][SENSORDATA][SENSORVALUES]:
                     obj[values['name']] = values['value']
-                decoded_msg = obj
+                parsed_msg = obj
             else:
                 raise Exception('Message format is not recognized')
-        return DataPoint(self.db, self.table, decoded_msg)
+
+            point = DataPoint(self.db, self.table, parsed_msg)
+            point.sensor_id = key
+            messages.append(point)
+        return messages
 
 
 class DataPoint(object):

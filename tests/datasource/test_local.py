@@ -26,10 +26,10 @@ def test_q_write(init_data_source):
     data_source, point_factory = init_data_source
 
     point = point_factory.from_mqtt_message(MqttMessage('abc/def', fixed_good_message))
-    assert data_source.publish(point) is True
+    assert data_source.publish(point[0]) is True
 
     point = point_factory.from_mqtt_message(MqttMessage('abc/def', fixed_good_message))
-    assert data_source.publish(point) is True
+    assert data_source.publish(point[0]) is True
 
     logs = data_source.query('SELECT * FROM message', None).get_points('message')
 

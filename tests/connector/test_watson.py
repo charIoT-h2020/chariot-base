@@ -38,5 +38,5 @@ async def test_basic(init_clients):
 
     point = point_factory.from_json_string(fixed_good_message)
 
-    assert client1.publish(point) is True
-    assert client2.publish(point) is True
+    assert client1.publish(point[0]) is True
+    assert client2.publish(point[0]) is True

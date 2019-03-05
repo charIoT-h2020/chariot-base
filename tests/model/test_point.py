@@ -34,10 +34,10 @@ def test_point(init_point_factory):
     point_factory = init_point_factory
 
     point = point_factory.from_json_string(fixed_good_message)
-    check_point(point)
+    check_point(point[0])
 
     point = point_factory.from_json_string(wifi_good_message)
-    check_point(point)
+    check_point(point[0])
 
     with pytest.raises(Exception):
         point_factory.from_json_string(bad_message)
@@ -47,8 +47,8 @@ def test_mqtt_point(init_point_factory):
     point_factory = init_point_factory
 
     point = point_factory.from_mqtt_message(MqttMessage('abc/def', fixed_good_message))
-    check_point(point)
-    assert point._event_type() == 'abc.def'
+    check_point(point[0])
+    assert point[0]._event_type() == 'abc.def'
 
     with pytest.raises(Exception):
         point_factory.from_mqtt_message(MqttMessage('abc/def', bad_message))
@@ -57,9 +57,9 @@ def test_mqtt_point(init_point_factory):
 def test_point_event_type(init_point_factory):
     point_factory = init_point_factory
     point = point_factory.from_json_string(fixed_good_message)
-    check_point(point)
+    check_point(point[0])
 
-    assert point._event_type() == ''
+    assert point[0]._event_type() == ''
 
-    point.topic = 'abc/def'
-    assert point._event_type() == 'abc.def'
+    point[0].topic = 'abc/def'
+    assert point[0]._event_type() == 'abc.def'
