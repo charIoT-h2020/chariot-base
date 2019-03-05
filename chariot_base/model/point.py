@@ -8,6 +8,7 @@ FIXEDIO = 'fixedIO'
 WIFI = 'wifi'
 SENSORDATA = 'sensorData'
 SENSORVALUES = 'sensorValues'
+SENSORNAME = 'sensorName'
 
 class DataPointFactory(object):
     """
@@ -46,6 +47,7 @@ class DataPointFactory(object):
                 for values in message[WIFI][SENSORDATA][SENSORVALUES]:
                     obj[values['name']] = values['value']
                 parsed_msg = obj
+                key = '%s_%s' % (key, message[WIFI][SENSORDATA][SENSORNAME])
             else:
                 raise Exception('Message format is not recognized')
 
