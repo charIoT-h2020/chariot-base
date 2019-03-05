@@ -2,6 +2,7 @@
 Chariot Base
 ======================
 
+|epl|_
 .. image:: https://img.shields.io/pypi/v/chariot-base.svg
         :target: https://pypi.python.org/pypi/chariot-base
 
@@ -9,9 +10,6 @@ Chariot Base
         :target: https://chariot-base.readthedocs.io/en/latest/?badge=latest
 
 Base utilities for chariot micro-services.
-
-* Free software: Eclipse Public License 1.0
-* Documentation: https://chariot-northbound-dispatcher.readthedocs.io.
 
 Development
 -----------
@@ -38,3 +36,6 @@ This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypack
 
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+
+.. |epl| image:: https://img.shields.io/badge/License-EPL-green.svg
+.. _epl: https://opensource.org/licenses/EPL-1.0
