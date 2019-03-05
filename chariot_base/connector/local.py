@@ -52,16 +52,42 @@ class LocalConnector(object):
         pass
 
     def on_subscribe(self, client, mid, qos):
+        """
+        The handler run when the client subscribed to a new topic
+
+        :param client: the subscribed MQTT client
+        :param mid:
+        :param qos: MQTT broker quality of service
+        """
         pass
 
     def on_disconnect(self, client, packet):
+        """
+        The handler run when the connections is fineshed
+
+        :param client: the subscribed MQTT client
+        :param packet:
+        """
         self.disconnected = True
 
     def on_connect(self, client, flags, rc, properties):
+        """
+        The handler run when the connections is established
+
+        :param client: the subscribed MQTT client
+        :param flags:
+        :param rc:
+        :param properties: Custom properties
+        """
         self.connected = True
         self.connack = (flags, rc, properties)
 
     def register_for_client(self, client):
+        """
+        Register handlers to the client.
+
+        :param client: Client to register handlers
+        """
         client.on_disconnect = self.on_disconnect
         client.on_message = self.on_message
         client.on_connect = self.on_connect
@@ -102,12 +128,23 @@ class LocalConnector(object):
             return self.tracer.tracer.start_span(id, child_of=child_span)
 
     def close_span(self, span):
+        """
+        Close a logging span
+        
+        :param span: Span to close
+        """
         if self.tracer is None:
             return
         span.finish()
 
 
 async def create_client(options, postfix='_client'):
+    """
+    Create a new GMQTT client
+
+    :param options: Options for client initialization
+    :para postfix: Unique postfix for the client
+    """
     client_id = '%s%s' % (uuid.uuid4(), postfix)
   
     client = gmqtt.Client(client_id, clean_session=True)
