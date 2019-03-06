@@ -2,6 +2,7 @@
 import json
 import uuid
 import datetime
+from ..utilities.parsing import try_parse
 
 
 FIXEDIO = 'fixedIO'
@@ -45,7 +46,7 @@ class DataPointFactory(object):
             elif WIFI in message:
                 obj = {}
                 for values in message[WIFI][SENSORDATA][SENSORVALUES]:
-                    obj[values['name']] = values['value']
+                    obj[values['name']] = try_parse(values['value'])
                 parsed_msg = obj
                 key = '%s_%s' % (key, message[WIFI][SENSORDATA][SENSORNAME])
             else:
@@ -55,7 +56,6 @@ class DataPointFactory(object):
             point.sensor_id = key
             messages.append(point)
         return messages
-
 
 class DataPoint(object):
     def __init__(self, db, table, message):

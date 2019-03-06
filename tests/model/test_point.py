@@ -27,7 +27,7 @@ def check_point(point):
     assert point.db == 'fog_logs'
     assert point.table == 'message'
     assert point.timestamp is not None
-    assert str(point.message['din0']) == '1'
+    assert point.message['din0'] == 1
 
 
 def test_point(init_point_factory):
