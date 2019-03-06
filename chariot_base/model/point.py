@@ -2,7 +2,7 @@
 import json
 import uuid
 import datetime
-from ..utilities.parsing import try_parse
+from ..utilities.parsing import try_parse, normalize_mac_address
 
 
 FIXEDIO = 'fixedIO'
@@ -40,6 +40,7 @@ class DataPointFactory(object):
         decoded_msg = json.loads(msg)
         messages = []
         for key, message in decoded_msg.items():
+            key = normalize_mac_address(key)
             parsed_msg = None
             if FIXEDIO in message:
                 parsed_msg = message[FIXEDIO]
