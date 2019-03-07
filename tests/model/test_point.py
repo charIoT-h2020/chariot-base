@@ -36,11 +36,11 @@ def test_point(init_point_factory):
     point = point_factory.from_json_string(fixed_good_message)
     check_point(point[0])
     
-    assert point[0].sensor_id == '52806c75c3fd'
+    assert point[0].sensor_id == 'gateway_52806c75c3fd'
 
     point = point_factory.from_json_string(wifi_good_message)
     check_point(point[0])
-    assert point[0].sensor_id == '52806c75c3fd_Sensor01'
+    assert point[0].sensor_id == 'device_52806c75c3fd_Sensor01'
 
     with pytest.raises(Exception):
         point_factory.from_json_string(bad_message)
