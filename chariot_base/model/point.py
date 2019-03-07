@@ -44,12 +44,13 @@ class DataPointFactory(object):
             parsed_msg = None
             if FIXEDIO in message:
                 parsed_msg = message[FIXEDIO]
+                key = 'gateway_%s' % key
             elif WIFI in message:
                 obj = {}
                 for values in message[WIFI][SENSORDATA][SENSORVALUES]:
                     obj[values['name']] = try_parse(values['value'])
                 parsed_msg = obj
-                key = '%s_%s' % (key, message[WIFI][SENSORDATA][SENSORNAME])
+                key = 'device_%s_%s' % (key, message[WIFI][SENSORDATA][SENSORNAME])
             else:
                 raise Exception('Message format is not recognized')
 
