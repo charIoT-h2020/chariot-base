@@ -41,3 +41,29 @@ class Tracer(object):
 
     def close(self):
         self.tracer.close()
+
+
+class Traceable:
+    def __init__(self):
+        self.tracer
+
+    def inject_tracer(self, tracer):
+        self.tracer = tracer
+
+    def set_up_tracer(self, options):
+        self.tracer = Tracer(options)
+        self.tracer.init_tracer()
+
+    def start_span(self, id, child_span=None):
+        if self.tracer is None:
+            return
+
+        if child_span is None:
+            return self.tracer.tracer.start_span(id)
+        else:
+            return self.tracer.tracer.start_span(id, child_of=child_span)
+
+    def close_span(self, span):
+        if self.tracer is None:
+            return
+        span.finish()
