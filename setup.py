@@ -62,6 +62,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://gitlab.com/chariot-h2020/chariot_base',
-    version='0.6.4',
+    version='0.7.0',
     zip_safe=False,
 )
