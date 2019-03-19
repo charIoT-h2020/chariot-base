@@ -3,10 +3,10 @@
 
 import uuid
 import gmqtt
-from ..utilities import Tracer
+from ..utilities import Traceable
 
 
-class LocalConnector:
+class LocalConnector(Traceable):
     """
     All subscribers/publisers at Chariot project should extend this class
     """
@@ -95,48 +95,6 @@ class LocalConnector:
         client.on_subscribe = self.on_subscribe
 
         self.client = client
-
-    def inject_tracer(self, tracer):
-        """
-        Inject an opentracing client
-
-        :param tracer: the opentracing client
-        """
-        self.tracer = tracer
-
-    def set_up_tracer(self, options):
-        """
-        Configure a new opentracing client
-
-        :param options: options to configure the new client
-        """
-        self.tracer = Tracer(options)
-        self.tracer.init_tracer()
-
-    def start_span(self, span_id, child_span=None):
-        """
-        Start a new logging span
-
-        :param span_id: identifier of a new logging span
-        :param child_span: parent span
-        """
-        if self.tracer is None:
-            return None
-
-        if child_span is None:
-            return self.tracer.tracer.start_span(span_id)
-        
-        return self.tracer.tracer.start_span(span_id, child_of=child_span)
-
-    def close_span(self, span):
-        """
-        Close a logging span
-
-        :param span: Span to close
-        """
-        if self.tracer is None:
-            return
-        span.finish()
 
 
 async def create_client(options, postfix='_client'):

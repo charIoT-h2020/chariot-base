@@ -32,17 +32,37 @@ class Tracer(object):
 
 
 class Traceable:
+    """
+    All utilities methods to send logs to jaeger
+    """
+
     def __init__(self):
         self.tracer = None
 
     def inject_tracer(self, tracer):
+        """
+        Inject an opentracing client
+
+        :param tracer: the opentracing client
+        """
         self.tracer = tracer
 
     def set_up_tracer(self, options):
+        """
+        Configure a new opentracing client
+
+        :param options: options to configure the new client
+        """
         self.tracer = Tracer(options)
         self.tracer.init_tracer()
 
     def start_span(self, id, child_span=None):
+        """
+        Start a new logging span
+
+        :param span_id: identifier of a new logging span
+        :param child_span: parent span
+        """
         if self.tracer is None:
             return
 
@@ -94,6 +114,11 @@ class Traceable:
         return msg
 
     def close_span(self, span):
+        """
+        Close a logging span
+
+        :param span: Span to close
+        """
         if self.tracer is None:
             return
         span.finish()
