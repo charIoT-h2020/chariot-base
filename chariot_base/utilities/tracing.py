@@ -64,7 +64,7 @@ class Traceable:
         :param child_span: parent span
         """
         if self.tracer is None:
-            return
+            return None
 
         if child_span is None:
             return self.tracer.tracer.start_span(id)
@@ -73,7 +73,7 @@ class Traceable:
 
     def start_span_from_message(self, id, msg):
         if self.tracer is None:
-            return
+            return None
         d = {
             'uber-trace-id': msg['uber-trace-id']
         }
@@ -84,7 +84,7 @@ class Traceable:
 
     def start_span_from_request(self, id, req):
         if self.tracer is None:
-            return
+            return None
 
         if req is None:
             return self.start_span()
@@ -96,7 +96,7 @@ class Traceable:
 
     def inject_to_request_header(self, span, url):
         if self.tracer is None:
-            return
+            return None
 
         span.set_tag(tags.HTTP_METHOD, 'GET')
         span.set_tag(tags.HTTP_URL, url)
@@ -107,7 +107,7 @@ class Traceable:
 
     def inject_to_message(self, span, msg):
         if self.tracer is None:
-            return
+            return None
         carrier = {}
         self.tracer.tracer.inject(span.context, Format.TEXT_MAP, carrier=carrier)
         msg['uber-trace-id'] = carrier['uber-trace-id']
