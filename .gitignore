@@ -104,3 +104,4 @@ ENV/
 .vscode
 
 tests/config.json
+config.json

@@ -10,8 +10,10 @@ test_package:
   services:
   - name: eclipse-mosquitto
     alias: mosquitto
-  - name: influxdb:1.5.4-alpine
+  - name: influxdb:1.7-alpine
     alias: influxdb
+  - name: jaegertracing/all-in-one:1.11.0
+    alias: jaegertracing
   script:
     - apk add gnupg gcc g++ make python3-dev libffi-dev openssl-dev gmp-dev
     - gpg --batch --passphrase $TEST_CONFIG_PASSPHRASE -o tests/config.json tests/config.json.gpg
