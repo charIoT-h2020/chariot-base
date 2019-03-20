@@ -23,7 +23,8 @@ requirements = [
     'ecdsa',
     'pycrypto',
     'jaeger-client',
-    'pytest-asyncio', 
+    'pytest-asyncio',
+    'falcon',
     # 'iotl',
 ]
 
