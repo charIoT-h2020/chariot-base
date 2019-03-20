@@ -113,6 +113,11 @@ class Traceable:
         msg['uber-trace-id'] = carrier['uber-trace-id']
         return msg
 
+    def set_tag(span, id, value):
+        if self.tracer is None:
+            return None
+        span.set_tag('is_ok', True)
+
     def close_span(self, span):
         """
         Close a logging span

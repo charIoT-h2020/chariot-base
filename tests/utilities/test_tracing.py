@@ -39,6 +39,7 @@ def test_no_tracer(get_tracer):
     span = alerts.inject_to_message(None, None)
     assert span is None
 
+    alerts.set_tag(None, None, None)
     alerts.close_span(None)
 
 
@@ -59,6 +60,7 @@ def test_open_span(get_tracer):
     span = alerts.start_span('root')
     assert span is not None
     m = alerts.inject_to_message(span, {})
+    alerts.set_tag(span, 'is_ok', True)
     time.sleep(.500)
     alerts.close_span(span)
 
