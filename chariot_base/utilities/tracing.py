@@ -87,7 +87,7 @@ class Traceable:
             return None
 
         if req is None:
-            return self.start_span()
+            return self.start_span(id)
 
         span_ctx = self.tracer.tracer.extract(Format.HTTP_HEADERS, req.headers)
         span_tags = {tags.SPAN_KIND: tags.SPAN_KIND_RPC_SERVER}

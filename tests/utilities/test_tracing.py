@@ -3,74 +3,102 @@
 
 import pytest
 import time
+import falcon
+import falcon.testing as testing
 
 from chariot_base.utilities import open_config_file, Traceable, Tracer
 
 @pytest.fixture(scope="session")
 def get_tracer():
     opts = open_config_file()
-    alerts = Traceable()
+    service = Traceable()
     options_tracer = opts.tracer
 
-    alerts.set_up_tracer(options_tracer)
+    service.set_up_tracer(options_tracer)
 
-    yield alerts.tracer
-    alerts.tracer.close()
+    yield service.tracer
+    service.tracer.close()
 
 
 def test_no_tracer(get_tracer):
     tracer = get_tracer   
-    alerts = Traceable()
+    service = Traceable()
 
-    assert alerts.tracer is None
+    assert service.tracer is None
 
-    span = alerts.start_span('root')
+    span = service.start_span('root')
     assert span is None
 
-    span = alerts.start_span_from_message('root', {})
+    span = service.start_span_from_message('root', {})
     assert span is None
 
-    span = alerts.start_span_from_request('root', None)
+    span = service.start_span_from_request('root', None)
     assert span is None
 
-    span = alerts.inject_to_request_header(None, None)
+    span = service.inject_to_request_header(None, None)
     assert span is None
 
-    span = alerts.inject_to_message(None, None)
+    span = service.inject_to_message(None, None)
     assert span is None
 
-    alerts.set_tag(None, None, None)
-    alerts.close_span(None)
+    service.set_tag(None, None, None)
+    service.close_span(None)
 
 
 def test_inject_tracer(get_tracer):
     tracer = get_tracer   
-    alerts = Traceable()
-    alerts.inject_tracer(tracer)
+    service = Traceable()
+    service.inject_tracer(tracer)
 
-    assert alerts.tracer is not None
+    assert service.tracer is not None
 
 
 def test_open_span(get_tracer):
     tracer = get_tracer
-    alerts = Traceable()
-    alerts.inject_tracer(tracer)
-    assert alerts.tracer is not None
+    service = Traceable()
+    service.inject_tracer(tracer)
+    assert service.tracer is not None
 
-    span = alerts.start_span('root')
+    span = service.start_span('root')
     assert span is not None
-    m = alerts.inject_to_message(span, {})
-    alerts.set_tag(span, 'is_ok', True)
+    m = service.inject_to_message(span, {})
+    service.set_tag(span, 'is_ok', True)
     time.sleep(.500)
-    alerts.close_span(span)
+    service.close_span(span)
 
-    cs = alerts.start_span_from_message('stage1', m)
-    m = alerts.inject_to_message(cs, {})
-    csin = alerts.start_span_from_message('stage2', m)
+    cs = service.start_span_from_message('stage1', m)
+    m = service.inject_to_message(cs, {})
+    csin = service.start_span_from_message('stage2', m)
     time.sleep(.300)
-    csinchild = alerts.start_span('stage3', csin)
-    alerts.close_span(csinchild)
+    csinchild = service.start_span('stage3', csin)
+    service.close_span(csinchild)
     time.sleep(.300)
-    alerts.close_span(csin)
+    service.close_span(csin)
     time.sleep(.100)
-    alerts.close_span(cs)
+    service.close_span(cs)
+
+
+def test_inject_http_request(get_tracer):
+
+    tracer = get_tracer
+    service = Traceable()
+    service.inject_tracer(tracer)
+
+    root = service.start_span_from_request('root', None)
+    headers = service.inject_to_request_header(root, 'https://api.test.org')
+    service.close_span(root)
+
+    env = testing.create_environ(
+            protocol='https',
+            host='example.org',
+            port=9000,
+            app='chariot_base',
+            path='/hello',
+            query_string='q=test',
+            headers=headers)
+
+    req = falcon.Request(env)
+
+    stage1 = service.start_span_from_request('root', req)
+    service.set_tag(stage1, 'is_ok', True)    
+    service.close_span(stage1)
