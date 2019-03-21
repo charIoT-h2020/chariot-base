@@ -8,7 +8,7 @@ import falcon.testing as testing
 
 from chariot_base.utilities import open_config_file, Traceable, Tracer
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope='session')
 def get_tracer():
     opts = open_config_file()
     service = Traceable()
@@ -41,6 +41,8 @@ def test_no_tracer(get_tracer):
     span = service.inject_to_message(None, None)
     assert span is None
 
+    service.log(None, {'event': 'time to first byte', 'packet.size': 100})
+    service.log(None, None)
     service.set_tag(None, None, None)
     service.close_span(None)
 
@@ -100,5 +102,16 @@ def test_inject_http_request(get_tracer):
     req = falcon.Request(env)
 
     stage1 = service.start_span_from_request('root', req)
-    service.set_tag(stage1, 'is_ok', True)    
+    service.set_tag(stage1, 'error', True)
+    service.log(stage1, {
+            'event': 'time to first byte',
+            'packet.size': 100})
+    service.log(stage1, {
+            'event': 'error',
+            'packet.size': 100})
+    try:
+        raise ValueError('test error')
+    except ValueError as ex:
+        service.error(stage1, ex, False)
+
     service.close_span(stage1)

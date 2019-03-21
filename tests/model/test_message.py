@@ -15,9 +15,9 @@ def test_message():
 
 def test_severity_string():
     message = Message('temp:001', 10.40)
-    assert(str(message) == '{"sensor_id": "temp:001", "value": 10.4, "destination": null}')
+    assert(str(message) == '{"id": null, "sensor_id": "temp:001", "value": 10.4, "destination": null, "uber-trace-id": null}')
 
 
 def test_severity_unicode():
     message = Message('temp:001', 10.40)
-    assert(message.__unicode__() == '{"sensor_id": "temp:001", "value": 10.4, "destination": null}')
+    assert(message.__unicode__() == '{"id": null, "sensor_id": "temp:001", "value": 10.4, "destination": null, "uber-trace-id": null}')
