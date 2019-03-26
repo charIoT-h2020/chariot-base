@@ -1,5 +1,8 @@
 image: python:3.6-alpine
 
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
 stages:
   - build
   - test
@@ -17,6 +20,7 @@ test_package:
   script:
     - apk add gnupg gcc g++ make python3-dev libffi-dev openssl-dev gmp-dev
     - gpg --batch --passphrase $TEST_CONFIG_PASSPHRASE -o tests/config.json tests/config.json.gpg
+    - cd iot-modeling-language && python setup install && cd ..
     - pip install -r requirements_dev.txt
     - tox
   artifacts:
