@@ -43,6 +43,7 @@ def test_no_tracer(get_tracer):
 
     service.log(None, {'event': 'time to first byte', 'packet.size': 100})
     service.log(None, None)
+    service.error(None, None)
     service.set_tag(None, None, None)
     service.close_span(None)
 
@@ -115,3 +116,9 @@ def test_inject_http_request(get_tracer):
         service.error(stage1, ex, False)
 
     service.close_span(stage1)
+
+    stage2 = service.start_span_from_request('root', req)
+    try:
+        raise ValueError('test error')
+    except ValueError as ex:
+        service.error(stage1, ex, True)

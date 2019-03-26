@@ -6,6 +6,7 @@ import json
 import gmqtt
 import pytest
 
+from chariot_base.connector import create_client
 from chariot_base.tests import Callbacks, cleanup
 
 OPTS = json.load(open('tests/config.json', 'r'))
@@ -46,6 +47,8 @@ async def test_basic(init_clients):
 
     await a_client.connect(host=host, port=port, version=4)
     await b_client.connect(host=host, port=port, version=4)
+
+    c_client = await create_client(options)
 
     callback2.subscribe(TOPICS[0], qos=2)
 

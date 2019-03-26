@@ -107,6 +107,7 @@ async def create_client(options, postfix='_client'):
     client_id = '%s%s' % (uuid.uuid4(), postfix)
 
     client = gmqtt.Client(client_id, clean_session=True)
+    client.set_auth_credentials(options.get('username', ''))
     await client.connect(host=options['host'], port=options['port'], version=4)
 
     return client
