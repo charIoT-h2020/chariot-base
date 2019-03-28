@@ -142,7 +142,7 @@ class Traceable:
         """
         if self.tracer is None:
             return None
-        span.set_tag(id, True)
+        span.set_tag(id, value)
 
     def log(self, span, values):
         """Adds a log record to the Span.
