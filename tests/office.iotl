@@ -1,6 +1,15 @@
-define GATEWAY BMS
-define SENSOR CardReader --params { "privacySensitive": 1 }
-define SENSOR TemperatureSensor1 --params { "privacySensitive": 0 }
-define SENSOR TemperatureSensor2 --params { "privacySensitive": 0 }
-acl BMS CardReader ALLOW
-acl BMS TemperatureSensor DENY
+define ZONE Office
+define GATEWAY BMS --params { "pubkey": "test", "type": "RSA" }
+register BMS -> Office
+define SENSOR device_52806c75c3fd_Sensor01 --params { "privacySensitive": 0 }
+define SENSOR device_52806c75c3fd_Sensor02 --params { "privacySensitive": 0 }
+define SENSOR device_52806c75c3fd_Sensor03 --params { "privacySensitive": 0 }
+define SENSOR device_52806c75c3fd_Sensor04 --params { "privacySensitive": 1 }
+register device_52806c75c3fd_Sensor01 -> BMS
+register device_52806c75c3fd_Sensor02 -> BMS
+register device_52806c75c3fd_Sensor03 -> BMS
+register device_52806c75c3fd_Sensor04 -> BMS
+acl BMS device_52806c75c3fd_Sensor01 DENY
+acl BMS device_52806c75c3fd_Sensor02 ALLOW
+acl BMS device_52806c75c3fd_Sensor03 ALLOW
+acl BMS device_52806c75c3fd_Sensor04 ALLOW
