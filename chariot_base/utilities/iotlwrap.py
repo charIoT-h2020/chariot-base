@@ -18,6 +18,12 @@ class IoTLWrapper(object):
         except KeyError:
             return False
 
+    def params(self, id):
+        try:
+            return self.IoTState.params[id]
+        except KeyError:
+            return {}
+
     def acl(self, sensor_id):
         try:
             return self.IoTState.acl[sensor_id]
