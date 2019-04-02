@@ -37,6 +37,6 @@ def test_acl(init_clients):
 def test_params(init_clients):
     client = init_clients
 
-    assert client.params('BMS')['pubkey'] == 'test'
+    assert client.params('BMS')['pubkey'] == '-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwusoeNOkZh8gvX7BGEy+rhRxV\nF/ZD11xm0UpzfTR5k/VTasjSyY1yzs2P0BePMUM78cJF21hEBL5fAFCqKpH7zhAj\nl5fFcQd/kZuIlB5ijJAjJhCKV8SK2rwXQXemo9Gc2PHdSg63qjYhEB55dPcClfNw\nCoWsKkKI55WtVjKsDQIDAQAB\n-----END PUBLIC KEY-----'
 
     assert len(client.acl('NotFound')) == 0
