@@ -10,6 +10,14 @@ WIFI = 'wifi'
 SENSORDATA = 'sensorData'
 SENSORVALUES = 'sensorValues'
 SENSORNAME = 'sensorName'
+SENSORSTATUSCODE = 'sensorStatusCode'
+
+
+class UnAuthenticatedSensor(Exception):
+    def __init__(self, id):
+        super(Exception, self).__init__()
+        self.id = id
+
 
 class DataPointFactory(object):
     """
@@ -46,11 +54,14 @@ class DataPointFactory(object):
                 parsed_msg = message[FIXEDIO]
                 key = 'gateway_%s' % key
             elif WIFI in message:
-                obj = {}
-                for values in message[WIFI][SENSORDATA][SENSORVALUES]:
-                    obj[values['name']] = try_parse(values['value'])
-                parsed_msg = obj
                 key = 'device_%s_%s' % (key, message[WIFI][SENSORDATA][SENSORNAME])
+                if message[WIFI][SENSORDATA][SENSORSTATUSCODE]:
+                    raise UnAuthenticatedSensor(key)
+                else:
+                    obj = {}
+                    for values in message[WIFI][SENSORDATA][SENSORVALUES]:
+                        obj[values['name']] = try_parse(values['value'])
+                    parsed_msg = obj                    
             else:
                 raise Exception('Message format is not recognized')
 

@@ -5,11 +5,12 @@
 
 import pytest
 
-from chariot_base.model import DataPointFactory
+from chariot_base.model import DataPointFactory, UnAuthenticatedSensor
 
 
 fixed_good_message = '{"52-80-6c-75-c3-fd": {"fixedIO": {"din0": 1}}}'
 wifi_good_message = '{"52-80-6c-75-c3-fd": {"wifi": {"wifiStatusCode": 0, "wifiStatusText": "Wifi online", "sensorData": {"sensorName": "Sensor01","sensorStatusCode": 0,"sensorStatusText": "Sensor online","sensorValues": [{"name": "din0","value": "1"}]}}}}'
+wifi_un_authenticated_sensor_message = '{"52-80-6c-75-c3-fd": {"wifi": {"wifiStatusCode": 0, "wifiStatusText": "Wifi online", "sensorData": {"sensorName": "Sensor01","sensorStatusCode": 2,"sensorStatusText": "Sensor without authentication"}}}}'
 bad_message = '{"52-80-6c-75-c3-fd": {"din0": 1}}'
 
 class MqttMessage:
@@ -44,6 +45,9 @@ def test_point(init_point_factory):
 
     with pytest.raises(Exception):
         point_factory.from_json_string(bad_message)
+
+    with pytest.raises(UnAuthenticatedSensor):
+        point_factory.from_json_string(wifi_un_authenticated_sensor_message)
 
 
 def test_mqtt_point(init_point_factory):
