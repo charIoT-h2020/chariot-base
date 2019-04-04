@@ -44,7 +44,7 @@ async def test_basic(init_clients):
 
     await asyncio.sleep(1)
 
-    callback2.publish('_health', "{\"destination\": \"_health/response\", \"timestamp\": \"%s\"}" % (datetime.datetime.utcnow().isoformat()))
+    callback2.publish('_health', "{\"id\": \"3ab0e795-78da-433d-8cec-0e84300a688b\",\"destination\": \"_health/response\", \"timestamp\": \"%s\"}" % (datetime.datetime.utcnow().isoformat()))
 
     await asyncio.sleep(1)
     assert len(callback2.messages) == 1

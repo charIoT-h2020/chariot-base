@@ -12,6 +12,7 @@ from chariot_base.connector import LocalConnector
 
 class HealthDigesterTest(LocalConnector):
     def __init__(self):
+        super(LocalConnector, self).__init__()
         self.health = HealthCheck('test_service')
         self.health.inject_connector(self)
 
