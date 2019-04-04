@@ -14,10 +14,9 @@ class HealthCheck(Traceable):
         return self
 
     def do(self, message):
+        message = json.loads(message)
         span = self.connector.start_span_from_message('health_check', message)
-        try:
-            message = json.loads(message)
-            
+        try:            
             received = datetime.datetime.utcnow().isoformat()
             topic = message['destination']
 

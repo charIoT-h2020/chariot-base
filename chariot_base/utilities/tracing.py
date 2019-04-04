@@ -72,6 +72,9 @@ class Traceable:
     def start_span_from_message(self, id, msg):
         if self.tracer is None:
             return None
+        if 'uber-trace-id' not in msg:
+            return self.start_span(id)
+
         d = {
             'uber-trace-id': msg['uber-trace-id']
         }
