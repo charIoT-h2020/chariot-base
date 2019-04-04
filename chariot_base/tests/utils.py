@@ -6,7 +6,17 @@ import asyncio
 import gmqtt
 import logging
 
+from chariot_base.utilities import HealthCheck
 from chariot_base.connector import LocalConnector
+
+
+class HealthDigesterTest(LocalConnector):
+    def __init__(self):
+        self.health = HealthCheck('test_service')
+        self.health.inject_connector(self)
+
+    def on_message(self, client, topic, payload, qos, properties):
+        self.health.do(payload)
 
 
 class Callbacks(LocalConnector):
@@ -26,7 +36,8 @@ class Callbacks(LocalConnector):
 
     def __str__(self):
         return str(self.messages) + str(self.messagedicts) + str(self.publisheds) + \
-               str(self.subscribeds) + str(self.unsubscribeds) + str(self.disconnected)
+            str(self.subscribeds) + str(self.unsubscribeds) + \
+            str(self.disconnected)
 
     def on_message(self, client, topic, payload, qos, properties):
         super().on_message(client, topic, payload, qos, properties)
@@ -44,7 +55,8 @@ async def clean_retained(host, port, username, password=None):
     def on_message(client, topic, payload, qos, properties):
         curclient.publish(topic, b"", qos=0, retain=True)
 
-    curclient = gmqtt.Client("clean retained".encode("utf-8"), clean_session=True)
+    curclient = gmqtt.Client(
+        "clean retained".encode("utf-8"), clean_session=True)
 
     curclient.set_auth_credentials(username, password)
     curclient.on_message = on_message
@@ -70,4 +82,3 @@ async def cleanup(host, port=1883, username=None, password=None, client_ids=None
 
     # clean retained messages
     await clean_retained(host, port, username, password=password)
-
