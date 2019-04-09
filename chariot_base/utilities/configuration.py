@@ -49,6 +49,7 @@ class Configuration(object):
         self.northbound_dispatcher = options.get('northbound_dispatcher', None)
         self.topology = options.get('topology', None)
         self.database = options.get('database', None)
+        self.health = options.get('health', None)
         self.set_logging(options.get('logging', default_logging))
 
     def set_logging(self, options):
