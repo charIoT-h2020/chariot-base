@@ -2,6 +2,12 @@
 from influxdb import InfluxDBClient
 
 
+def open_datasource(options):
+    return LocalDataSource(
+        options['host'], options['port'], options['username'], options['password'], options['database']
+    )
+
+
 class LocalDataSource(object):
 
     def __init__(self, hostname, port, username, password, db_name, duration='4w'):
@@ -19,6 +25,17 @@ class LocalDataSource(object):
                 },
                 'time': point.timestamp,
                 'fields': point.message
+            }
+        ]
+        return self.db.write_points(json_body, protocol='json', retention_policy='awesome_policy')
+
+    def publish_dict(self, point_dict):
+        json_body = [
+            {
+                'measurement': point_dict['table'],
+                'tags': point_dict['tags'],
+                'time': point_dict['timestamp'],
+                'fields': point_dict['message']
             }
         ]
         return self.db.write_points(json_body, protocol='json', retention_policy='awesome_policy')
