@@ -7,9 +7,12 @@ class IoTLWrapper(object):
         self.filepath = options['filepath']
         self.IoTState = interpreter.IoTState()
 
-    def load(self):
-        with open(self.filepath, 'r') as f:
-            self.IoTState.parse(f.read())
+    def load(self, data=None):
+        if data is None:
+            with open(self.filepath, 'r') as f:
+                self.IoTState.parse(f.read())
+        else:
+            self.IoTState.parse(data)
         return True
 
     def isSensitive(self, sensor_id):
