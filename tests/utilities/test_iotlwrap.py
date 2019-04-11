@@ -16,8 +16,9 @@ async def init_clients():
     yield client
 
 
-def test_isSensitive(init_clients):
+def test_load(init_clients):
     client = init_clients
+    client.load('define SENSOR device_52806c75c3fd_Sensor06 --params { "privacySensitive": 1 }')
     client.load('define SENSOR device_52806c75c3fd_Sensor06 --params { "privacySensitive": 1 }')
     assert client.isSensitive('device_52806c75c3fd_Sensor06') == True
 
