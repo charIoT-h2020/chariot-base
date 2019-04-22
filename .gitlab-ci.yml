@@ -42,23 +42,23 @@ build_package:
   only:
     - tags
 
-# docs:
-#   stage: deploy
-#   before_script:
-#     - "true"
-#   script:
-#     - apk add gcc g++ make libffi-dev openssl-dev gmp-dev
-#     - pip install -r requirements_dev.txt
-#     - python setup.py install
-#     - cd docs
-#     - make html
-#     - cp -fr _build ../public
-#   artifacts:
-#     paths:
-#       - public
-#   only:
-#     - tags
-#     - master
+docs:
+  stage: deploy
+  before_script:
+    - "true"
+  script:
+    - apk add gnupg gcc g++ make python3-dev libffi-dev openssl-dev gmp-dev
+    - pip install -r requirements_dev.txt
+    - python setup.py install
+    - cd docs
+    - make html
+    - cp -fr _build ../public
+  artifacts:
+    paths:
+      - public
+  only:
+    - tags
+    - master
 
 # pages:
 #   stage: deploy
