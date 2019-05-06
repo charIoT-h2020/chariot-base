@@ -6,6 +6,7 @@ from ..utilities.parsing import try_parse, normalize_mac_address
 
 
 FIXEDIO = 'fixedIO'
+FIRMWARE_UPLOAD = 'FirmwareUpload'
 WIFI = 'wifi'
 BLE = 'ble'
 SENSORDATA = 'sensorData'
@@ -58,13 +59,22 @@ class DataPointFactory(object):
                 parsed_msg, key = self.parse_json_from_smart_sensor(WIFI, message, key)
             elif BLE in message:
                 parsed_msg, key = self.parse_json_from_smart_sensor(BLE, message, key)
+            elif FIRMWARE_UPLOAD in message:
+                parsed_msg, key = self.parse_json_from_firmware(message, key)
             else:
                 raise Exception('Message format is not recognized')
 
-            point = DataPoint(self.db, self.table, parsed_msg)
-            point.sensor_id = key
+            if FIRMWARE_UPLOAD in message:
+                point = FirmwareUpdateStatus(self.db, self.table, parsed_msg)
+                point.sensor_id = key
+            else:
+                point = DataPoint(self.db, self.table, parsed_msg)
+                point.sensor_id = key
             messages.append(point)
         return messages
+
+    def parse_json_from_firmware(self, message, key):
+        pass
 
     def parse_json_from_smart_sensor(self, connection_type, message, key):
         key = 'device_%s_%s' % (key, message[connection_type][SENSORDATA][SENSORNAME])
@@ -76,7 +86,7 @@ class DataPointFactory(object):
                 obj[values['name']] = try_parse(values['value'])
             return obj, key 
 
-class DataPoint(object):
+class DataPoint:
     def __init__(self, db, table, message):
         self.id = uuid.uuid4()
         self.db = db
@@ -90,3 +100,8 @@ class DataPoint(object):
         if self.topic is None:
             return ''
         return self.topic.replace('/', '.')
+
+
+class FirmwareUpdateStatus(DataPoint):
+    def __init__(self, db, table, message):
+        super().__init__(db, table, message)
