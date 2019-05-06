@@ -7,6 +7,7 @@ from ..utilities.parsing import try_parse, normalize_mac_address
 
 FIXEDIO = 'fixedIO'
 WIFI = 'wifi'
+BLE = 'ble'
 SENSORDATA = 'sensorData'
 SENSORVALUES = 'sensorValues'
 SENSORNAME = 'sensorName'
@@ -48,20 +49,15 @@ class DataPointFactory(object):
         decoded_msg = json.loads(msg)
         messages = []
         for key, message in decoded_msg.items():
-            key = normalize_mac_address(key)
+            key = normalize_mac_address(key.replace('NMS_', ''))
             parsed_msg = None
             if FIXEDIO in message:
                 parsed_msg = message[FIXEDIO]
                 key = 'gateway_%s' % key
             elif WIFI in message:
-                key = 'device_%s_%s' % (key, message[WIFI][SENSORDATA][SENSORNAME])
-                if message[WIFI][SENSORDATA][SENSORSTATUSCODE]:
-                    raise UnAuthenticatedSensor(key)
-                else:
-                    obj = {}
-                    for values in message[WIFI][SENSORDATA][SENSORVALUES]:
-                        obj[values['name']] = try_parse(values['value'])
-                    parsed_msg = obj                    
+                parsed_msg, key = self.parse_json_from_smart_sensor(WIFI, message, key)
+            elif BLE in message:
+                parsed_msg, key = self.parse_json_from_smart_sensor(BLE, message, key)
             else:
                 raise Exception('Message format is not recognized')
 
@@ -69,6 +65,16 @@ class DataPointFactory(object):
             point.sensor_id = key
             messages.append(point)
         return messages
+
+    def parse_json_from_smart_sensor(self, connection_type, message, key):
+        key = 'device_%s_%s' % (key, message[connection_type][SENSORDATA][SENSORNAME])
+        if message[connection_type][SENSORDATA][SENSORSTATUSCODE]:
+            raise UnAuthenticatedSensor(key)
+        else:
+            obj = {}
+            for values in message[connection_type][SENSORDATA][SENSORVALUES]:
+                obj[values['name']] = try_parse(values['value'])
+            return obj, key 
 
 class DataPoint(object):
     def __init__(self, db, table, message):

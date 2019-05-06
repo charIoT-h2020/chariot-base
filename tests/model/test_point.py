@@ -8,10 +8,11 @@ import pytest
 from chariot_base.model import DataPointFactory, UnAuthenticatedSensor
 
 
-fixed_good_message = '{"52-80-6c-75-c3-fd": {"fixedIO": {"din0": 1}}}'
-wifi_good_message = '{"52-80-6c-75-c3-fd": {"wifi": {"wifiStatusCode": 0, "wifiStatusText": "Wifi online", "sensorData": {"sensorName": "Sensor01","sensorStatusCode": 0,"sensorStatusText": "Sensor online","sensorValues": [{"name": "din0","value": "1"}]}}}}'
-wifi_un_authenticated_sensor_message = '{"52-80-6c-75-c3-fd": {"wifi": {"wifiStatusCode": 0, "wifiStatusText": "Wifi online", "sensorData": {"sensorName": "Sensor01","sensorStatusCode": 2,"sensorStatusText": "Sensor without authentication"}}}}'
-bad_message = '{"52-80-6c-75-c3-fd": {"din0": 1}}'
+fixed_good_message = '{"NMS_52-80-6c-75-c3-fd": {"fixedIO": {"din0": 1}}}'
+wifi_good_message = '{"NMS_52-80-6c-75-c3-fd": {"wifi": {"wifiStatusCode": 0, "wifiStatusText": "Wifi online", "sensorData": {"sensorName": "Sensor01","sensorStatusCode": 0,"sensorStatusText": "Sensor online","sensorValues": [{"name": "din0","value": "1"}]}}}}'
+ble_good_message = '{"NMS_52-80-6c-75-c3-fd": {"ble": {"bleStatusCode": 0, "bleStatusText": "BLE online", "sensorData": {"sensorName": "Sensor01","sensorStatusCode": 0,"sensorStatusText": "Sensor online","sensorValues": [{"name": "din0","value": "1"}, {"name": "Temperature", "value": "18", "unit": "Celsius"}]}}}}'
+wifi_un_authenticated_sensor_message = '{"NMS_52-80-6c-75-c3-fd": {"wifi": {"wifiStatusCode": 0, "wifiStatusText": "Wifi online", "sensorData": {"sensorName": "Sensor01","sensorStatusCode": 2,"sensorStatusText": "Sensor without authentication"}}}}'
+bad_message = '{"NMS_52-80-6c-75-c3-fd": {"din0": 1}}'
 
 class MqttMessage:
     def __init__(self, topic, message):
@@ -41,6 +42,11 @@ def test_point(init_point_factory):
 
     point = point_factory.from_json_string(wifi_good_message)
     check_point(point[0])
+    assert point[0].sensor_id == 'device_52806c75c3fd_Sensor01'
+
+    point = point_factory.from_json_string(ble_good_message)
+    check_point(point[0])
+    assert point[0].message['Temperature'] == 18
     assert point[0].sensor_id == 'device_52806c75c3fd_Sensor01'
 
     with pytest.raises(Exception):
