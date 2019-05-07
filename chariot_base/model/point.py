@@ -36,6 +36,10 @@ class DataPointFactory(object):
     def __init__(self, db, table):
         self.db = db
         self.table = table
+        self.firmware_upload_table = table
+
+    def set_firmware_upload_table(self, table):
+        self.firmware_upload_table = table
 
     def from_mqtt_message(self, message):
         """
@@ -73,7 +77,7 @@ class DataPointFactory(object):
                 raise Exception('Message format is not recognized')
 
             if FIRMWARE_UPLOAD in message:
-                point = FirmwareUpdateStatus(self.db, self.table, parsed_msg)
+                point = FirmwareUpdateStatus(self.db, self.firmware_upload_table, parsed_msg)
                 point.sensor_id = key
             else:
                 point = DataPoint(self.db, self.table, parsed_msg)
