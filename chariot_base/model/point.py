@@ -7,6 +7,7 @@ from ..utilities.parsing import try_parse, normalize_mac_address
 
 FIXEDIO = 'fixedIO'
 FIRMWARE_UPLOAD = 'FirmwareUpload'
+FIRMWARE_STATUS = 'firmwareStatusCode'
 WIFI = 'wifi'
 BLE = 'ble'
 SENSORDATA = 'sensorData'
@@ -19,6 +20,13 @@ class UnAuthenticatedSensor(Exception):
     def __init__(self, id):
         super(Exception, self).__init__()
         self.id = id
+
+
+class FirmwareUploadException(Exception):
+    def __init__(self, key, point):
+        super(Exception, self).__init__()
+        self.key = key
+        self.point = point
 
 
 class DataPointFactory(object):
@@ -71,10 +79,15 @@ class DataPointFactory(object):
                 point = DataPoint(self.db, self.table, parsed_msg)
                 point.sensor_id = key
             messages.append(point)
-        return messages
+        return messages   
 
     def parse_json_from_firmware(self, message, key):
-        pass
+        obj = message[FIRMWARE_UPLOAD]
+        key = 'device_%s_%s' % (key, obj[SENSORNAME])
+        if obj[FIRMWARE_STATUS] == 0:
+            raise FirmwareUploadException(key, obj)
+        else:
+            return obj, key
 
     def parse_json_from_smart_sensor(self, connection_type, message, key):
         key = 'device_%s_%s' % (key, message[connection_type][SENSORDATA][SENSORNAME])
