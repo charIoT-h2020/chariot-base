@@ -3,7 +3,7 @@
 Chariot base modules
 """
 
-__version__ = '0.9.5'
+__version__ = '0.9.6'
 
 from .connector import *
 from .datasource import *
