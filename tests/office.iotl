@@ -13,3 +13,8 @@ acl BMS device_52806c75c3fd_Sensor01 DENY
 acl BMS device_52806c75c3fd_Sensor02 ALLOW
 acl BMS device_52806c75c3fd_Sensor03 ALLOW
 acl BMS device_52806c75c3fd_Sensor04 ALLOW
+schema EmployeeID --pattern "\d{4}-\d{4}-\d{4}-\d{4}" --private
+schema FloatNumber --pattern "[-+]?[0-9]*\.?[0-9]*"
+
+expect device_52806c75c3fd_Sensor03 EmployeeID
+expect device_52806c75c3fd_Sensor04 EmployeeID

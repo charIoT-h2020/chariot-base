@@ -41,6 +41,24 @@ def test_acl(init_clients):
     assert len(client.acl('NotFound')) == 0
 
 
+def test_schema(init_clients):
+    client = init_clients
+
+    assert len(client.schema()) == 2
+    assert len(client.schema(True)) == 1
+
+    assert client.schema(True)[0]["pattern"] == '\\d{4}-\\d{4}-\\d{4}-\\d{4}'
+
+
+def test_is_match(init_clients):
+    client = init_clients
+
+    private_schema = client.schema(True)[0]
+
+    assert client.is_match(private_schema, '0000') == False
+    assert client.is_match(private_schema, '0000-0000-0000-0000') == True
+
+
 def test_params(init_clients):
     client = init_clients
 

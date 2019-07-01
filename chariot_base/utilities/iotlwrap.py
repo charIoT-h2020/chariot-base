@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import re 
+
 from iotl import interpreter
 
 class IoTLWrapper(object):
@@ -32,3 +34,11 @@ class IoTLWrapper(object):
             return self.IoTState.acl[sensor_id]
         except KeyError:
             return []
+
+    def schema(self, only_private=False):
+        if only_private:
+            return [self.IoTState.schema[key] for key in self.IoTState.schema if self.IoTState.schema[key]['is_private'] == True]
+        return self.IoTState.schema
+
+    def is_match(self, schema, msg):
+        return re.search(schema["pattern"], msg) is not None
