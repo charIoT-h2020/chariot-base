@@ -57,6 +57,7 @@ def test_is_match(init_clients):
 
     assert client.is_match(private_schema, '0000') == False
     assert client.is_match(private_schema, '0000-0000-0000-0000') == True
+    assert client.is_match(private_schema, '{"val": "0000-0000-0000-0000", "val": "1600-0030-0200-1000" }') == True
 
 
 def test_params(init_clients):
