@@ -66,3 +66,22 @@ def test_params(init_clients):
     assert client.params('BMS')['pubkey'] == 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlvpBSa4JE87BgBKixnX5qkiB2XcTsJekD3ubtqaWE5WbakkcIvtuHbD0439SFF9HRrj2migJfzPSeWk74cHrBlVWq9jNAQx4HbH2/I5pvDd6jAB+xKrOZ0iQD7Vc8eN7IZBhLgvwsDKZL0s1s7NtosIzjL8BcHTXOZCsmJuccWKYLVSpZ+ffm926kbD5E0lsWhJgDkZ5vtsIed38cTdMJ3oyx9DJy9Jdx2YECHDmm+uQMRoACoNx5L4RdJA280F0amzIhq33wBIKBdwaqrEDKtkTiefGKZnFIpMFp3JWCkvttG4KBxamjH+26GxUmMMQkkqhKUbCtfRHWmmgo40wrwIDAQAB'
 
     assert len(client.params('NotFound')) == 0
+
+
+def test_sensor(init_clients):
+    client = init_clients
+
+    assert len(client.sensor()) == 4
+
+
+def test_sync(init_clients):
+    client = init_clients
+
+    client.sync()
+    assert len(client.sensor()) == 40
+
+
+def test_expects(init_clients):
+    client = init_clients
+    assert client.expects('device_52806c75c3fd_Sensor03')[0] == '\\d{4}-\\d{4}-\\d{4}-\\d{4}'
+    assert client.expects('device_52806c75c3fd') == []
