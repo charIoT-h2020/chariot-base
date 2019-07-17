@@ -77,8 +77,11 @@ def test_sensor(init_clients):
 def test_sync(init_clients):
     client = init_clients
 
-    client.sync()
-    assert len(client.sensor()) == 40
+    status = client.sync()
+    if status:
+        assert len(client.sensor()) == 40
+    else:
+        assert len(client.sensor()) == 4
 
 
 def test_expects(init_clients):

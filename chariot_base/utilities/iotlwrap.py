@@ -26,6 +26,8 @@ class IoTLWrapper(object):
             self.load(current_iotl['code'])
             self.schema = self.schema(True)
             logging.debug('Topology is updated')
+            return True
+        return False
 
     def load(self, data=None):
         if data is None:
