@@ -1,6 +1,9 @@
 image: python:3.6-alpine
 
 variables:
+  CONTAINER_IMAGE: registry.gitlab.com/$CI_PROJECT_PATH
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
   GIT_SUBMODULE_STRATEGY: recursive
 
 stages:
@@ -60,21 +63,6 @@ docs:
     - tags
     - master
 
-# pages:
-#   stage: deploy
-#   before_script:
-#     - "true"
-#   script:
-#     - mkdir -p public/coverage
-#     - cp -fr htmlcov/* public/coverage/
-#   dependencies:
-#     - test_package
-#   artifacts:
-#     paths:
-#       - public
-#   only:
-#     - tags
-
 deploy_production:
   stage: deploy
   variables:
@@ -87,3 +75,20 @@ deploy_production:
     - build_package
   only:
     - tags
+
+build:
+  image: docker:stable
+  stage: build
+  services:
+    - docker:dind
+  only:
+    - tags
+    - triggers
+    - schedules
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+    - docker pull $CONTAINER_IMAGE:latest || true
+    - docker build --cache-from $CONTAINER_IMAGE:latest --tag $CONTAINER_IMAGE:$CI_COMMIT_TAG --tag $CONTAINER_IMAGE:$CI_BUILD_REF --tag $CONTAINER_IMAGE:latest .
+    - docker push $CONTAINER_IMAGE:$CI_COMMIT_TAG
+    - docker push $CONTAINER_IMAGE:$CI_BUILD_REF
+    - docker push $CONTAINER_IMAGE:latest
