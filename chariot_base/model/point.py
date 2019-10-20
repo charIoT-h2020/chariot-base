@@ -7,8 +7,8 @@ from ..utilities.parsing import try_parse, normalize_mac_address
 
 
 FIXEDIO = 'fixedIO'
-FIRMWARE_UPLOAD = 'FirmwareUpload'
-FIRMWARE_STATUS = 'firmwareStatusCode'
+FIRMWARE_UPLOAD = 'ftpFwUpd'
+FIRMWARE_STATUS = 'ftpFwUpdEventCode'
 WIFI = 'wifi'
 BLE = 'ble'
 SENSORDATA = 'sensorData'
@@ -81,7 +81,7 @@ class DataPointFactory(object):
                 raise Exception('Message format is not recognized')
 
             if FIRMWARE_UPLOAD in message:
-                point = FirmwareUpdateStatus(self.db, self.firmware_upload_table, parsed_msg)
+                point, key = FirmwareUpdateStatus(self.db, self.firmware_upload_table, parsed_msg)
                 point.sensor_id = key
             else:
                 point = DataPoint(self.db, self.table, parsed_msg)
@@ -91,7 +91,10 @@ class DataPointFactory(object):
 
     def parse_json_from_firmware(self, message, key):
         obj = message[FIRMWARE_UPLOAD]
-        key = 'device_%s_%s' % (key, obj[SENSORNAME])
+        if SENSORNAME in obj:
+            key = 'device_%s_%s' % (key, obj[SENSORNAME])
+        else:
+            key = 'gateway_%s' % key
         if obj[FIRMWARE_STATUS] == 0:
             raise FirmwareUploadException(key, obj)
         else:
