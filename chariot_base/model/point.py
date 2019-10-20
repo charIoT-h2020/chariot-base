@@ -81,7 +81,7 @@ class DataPointFactory(object):
                 raise Exception('Message format is not recognized')
 
             if FIRMWARE_UPLOAD in message:
-                point, key = FirmwareUpdateStatus(self.db, self.firmware_upload_table, parsed_msg)
+                point = FirmwareUpdateStatus(self.db, self.firmware_upload_table, parsed_msg)
                 point.sensor_id = key
             else:
                 point = DataPoint(self.db, self.table, parsed_msg)
