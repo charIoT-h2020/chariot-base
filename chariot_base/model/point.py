@@ -2,6 +2,7 @@
 import json
 import uuid
 import datetime
+import logging
 from ..utilities.parsing import try_parse, normalize_mac_address
 
 
@@ -65,6 +66,7 @@ class DataPointFactory(object):
         messages = []
         for key, message in decoded_msg.items():
             key = normalize_mac_address(key.replace('NMS_', ''))
+            logging.debug(f'key: {key} message: {message}')
             parsed_msg = None
             if FIXEDIO in message:
                 parsed_msg = message[FIXEDIO]
@@ -96,11 +98,12 @@ class DataPointFactory(object):
             return obj, key
 
     def parse_json_from_smart_sensor(self, connection_type, message, key):
-        key = 'device_%s_%s' % (key, message[connection_type][SENSORDATA][SENSORNAME])
         if SENSORSECURITYEVENT in message[connection_type]:
+            key = 'device_%s_%s' % (key, message[connection_type][SENSORSECURITYEVENT][SENSORNAME])
             if message[connection_type][SENSORSECURITYEVENT][SENSORSECURITYEVENTCODE] == 1:
                 raise UnAuthenticatedSensor(key)
         else:
+            key = 'device_%s_%s' % (key, message[connection_type][SENSORDATA][SENSORNAME])
             obj = {}
             for values in message[connection_type][SENSORDATA][SENSORVALUES]:
                 obj[values['name']] = try_parse(values['value'])
