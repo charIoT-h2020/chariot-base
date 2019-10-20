@@ -11,6 +11,8 @@ FIRMWARE_STATUS = 'firmwareStatusCode'
 WIFI = 'wifi'
 BLE = 'ble'
 SENSORDATA = 'sensorData'
+SENSORSECURITYEVENT = 'sensorSecurityEvent'
+SENSORSECURITYEVENTCODE = 'sensorSecurityEventCode'
 SENSORVALUES = 'sensorValues'
 SENSORNAME = 'sensorName'
 SENSORSTATUSCODE = 'sensorStatusCode'
@@ -83,7 +85,7 @@ class DataPointFactory(object):
                 point = DataPoint(self.db, self.table, parsed_msg)
                 point.sensor_id = key
             messages.append(point)
-        return messages   
+        return messages
 
     def parse_json_from_firmware(self, message, key):
         obj = message[FIRMWARE_UPLOAD]
@@ -95,13 +97,14 @@ class DataPointFactory(object):
 
     def parse_json_from_smart_sensor(self, connection_type, message, key):
         key = 'device_%s_%s' % (key, message[connection_type][SENSORDATA][SENSORNAME])
-        if message[connection_type][SENSORDATA][SENSORSTATUSCODE]:
-            raise UnAuthenticatedSensor(key)
+        if SENSORSECURITYEVENT in message[connection_type]:
+            if message[connection_type][SENSORSECURITYEVENT][SENSORSECURITYEVENTCODE] == 1:
+                raise UnAuthenticatedSensor(key)
         else:
             obj = {}
             for values in message[connection_type][SENSORDATA][SENSORVALUES]:
                 obj[values['name']] = try_parse(values['value'])
-            return obj, key 
+            return obj, key
 
 class DataPoint:
     def __init__(self, db, table, message):
