@@ -95,10 +95,11 @@ class DataPointFactory(object):
             key = 'device_%s_%s' % (key, obj[SENSORNAME])
         else:
             key = 'gateway_%s' % key
-        if obj[FIRMWARE_STATUS] == 0:
-            raise FirmwareUploadException(key, obj)
-        else:
+
+        if obj[FIRMWARE_STATUS] == 1 or obj[FIRMWARE_STATUS] == 2:
             return obj, key
+        else:
+            raise FirmwareUploadException(key, obj)
 
     def parse_json_from_smart_sensor(self, connection_type, message, key):
         if SENSORSECURITYEVENT in message[connection_type]:
