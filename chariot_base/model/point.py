@@ -108,6 +108,10 @@ class DataPointFactory(object):
                 raise UnAuthenticatedSensor(key)
         else:
             key = 'device_%s_%s' % (key, message[connection_type][SENSORDATA][SENSORNAME])
+
+            if message[connection_type][SENSORDATA][SENSORSTATUSCODE] == 2:
+                raise UnAuthenticatedSensor(key)
+
             obj = {}
             for values in message[connection_type][SENSORDATA][SENSORVALUES]:
                 obj[values['name']] = try_parse(values['value'])
