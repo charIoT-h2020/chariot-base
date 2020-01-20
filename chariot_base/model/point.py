@@ -2,15 +2,18 @@
 import json
 import uuid
 import datetime
+import logging
 from ..utilities.parsing import try_parse, normalize_mac_address
 
 
 FIXEDIO = 'fixedIO'
-FIRMWARE_UPLOAD = 'FirmwareUpload'
-FIRMWARE_STATUS = 'firmwareStatusCode'
+FIRMWARE_UPLOAD = 'ftpFwUpd'
+FIRMWARE_STATUS = 'ftpFwUpdEventCode'
 WIFI = 'wifi'
 BLE = 'ble'
 SENSORDATA = 'sensorData'
+SENSORSECURITYEVENT = 'sensorSecurityEvent'
+SENSORSECURITYEVENTCODE = 'sensorSecurityEventCode'
 SENSORVALUES = 'sensorValues'
 SENSORNAME = 'sensorName'
 SENSORSTATUSCODE = 'sensorStatusCode'
@@ -63,6 +66,7 @@ class DataPointFactory(object):
         messages = []
         for key, message in decoded_msg.items():
             key = normalize_mac_address(key.replace('NMS_', ''))
+            logging.debug(f'key: {key} message: {message}')
             parsed_msg = None
             if FIXEDIO in message:
                 parsed_msg = message[FIXEDIO]
@@ -83,25 +87,35 @@ class DataPointFactory(object):
                 point = DataPoint(self.db, self.table, parsed_msg)
                 point.sensor_id = key
             messages.append(point)
-        return messages   
+        return messages
 
     def parse_json_from_firmware(self, message, key):
         obj = message[FIRMWARE_UPLOAD]
-        key = 'device_%s_%s' % (key, obj[SENSORNAME])
-        if obj[FIRMWARE_STATUS] == 0:
-            raise FirmwareUploadException(key, obj)
+        if SENSORNAME in obj:
+            key = 'device_%s_%s' % (key, obj[SENSORNAME])
         else:
+            key = 'gateway_%s' % key
+
+        if obj[FIRMWARE_STATUS] == 1 or obj[FIRMWARE_STATUS] == 2:
             return obj, key
+        else:
+            raise FirmwareUploadException(key, obj)
 
     def parse_json_from_smart_sensor(self, connection_type, message, key):
-        key = 'device_%s_%s' % (key, message[connection_type][SENSORDATA][SENSORNAME])
-        if message[connection_type][SENSORDATA][SENSORSTATUSCODE]:
-            raise UnAuthenticatedSensor(key)
+        if SENSORSECURITYEVENT in message[connection_type]:
+            key = 'device_%s_%s' % (key, message[connection_type][SENSORSECURITYEVENT][SENSORNAME])
+            if message[connection_type][SENSORSECURITYEVENT][SENSORSECURITYEVENTCODE] == 1:
+                raise UnAuthenticatedSensor(key)
         else:
+            key = 'device_%s_%s' % (key, message[connection_type][SENSORDATA][SENSORNAME])
+
+            if message[connection_type][SENSORDATA][SENSORSTATUSCODE] == 2:
+                raise UnAuthenticatedSensor(key)
+
             obj = {}
             for values in message[connection_type][SENSORDATA][SENSORVALUES]:
                 obj[values['name']] = try_parse(values['value'])
-            return obj, key 
+            return obj, key
 
 class DataPoint:
     def __init__(self, db, table, message):
