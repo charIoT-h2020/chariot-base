@@ -59,7 +59,7 @@ class IoTLWrapper(object):
         return self.IoTState.system['SENSOR']
 
     def expects(self, name):
-        keys = self.IoTState.expects.get(name, [])
+        keys = self.IoTState.expects(name)
         return [self.IoTState.schema[key]['pattern'] for key in keys]
 
     def schema(self, only_private=False):

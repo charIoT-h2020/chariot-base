@@ -8,8 +8,8 @@ import pytest
 from chariot_base.model import FirmwareUpdateStatus, DataPointFactory, FirmwareUploadException
 
 
-fixed_message = '{"NMS_52-80-6c-75-c3-fd": {"FirmwareUpload": {"sensorName": "Sensor01", "firmwareStatusCode": 1, "firmwareStatusText": "Firmware Approved"}}}'
-fixed_message_rejected = '{"NMS_52-80-6c-75-c3-fd": {"FirmwareUpload": {"sensorName": "Sensor01", "firmwareStatusCode": 0, "firmwareStatusText": "Firmware Rejected"}}}'
+fixed_message = '{"NMS_52-80-6c-75-c3-fd": {"ftpFwUpd": {"sensorName": "Sensor01", "ftpFwUpdEventCode": 1, "firmwareStatusText": "Firmware Approved"}}}'
+fixed_message_rejected = '{"NMS_52-80-6c-75-c3-fd": {"ftpFwUpd": {"sensorName": "Sensor01", "ftpFwUpdEventCode": 0, "firmwareStatusText": "Firmware Rejected"}}}'
 
 
 @pytest.fixture()
@@ -22,7 +22,7 @@ def check_point(point):
     assert point.table == 'message'
     assert point.timestamp is not None
     assert point.message['sensorName'] == 'Sensor01'
-    assert point.message['firmwareStatusCode'] == 1
+    assert point.message['ftpFwUpdEventCode'] == 1
     assert point.message['firmwareStatusText'] == 'Firmware Approved'
 
 

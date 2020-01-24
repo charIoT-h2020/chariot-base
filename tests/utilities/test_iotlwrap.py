@@ -36,7 +36,7 @@ def test_isSensitive(init_clients):
 def test_acl(init_clients):
     client = init_clients
 
-    assert client.acl('device_52806c75c3fd_Sensor04')[0][0] == 'BMS'
+    assert client.acl('device_52806c75c3fd_Sensor04')['ALLOW'][0] == 'BMS'
 
     assert len(client.acl('NotFound')) == 0
 
