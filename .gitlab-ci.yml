@@ -22,7 +22,8 @@ test_package:
     alias: jaegertracing
   script:
     - apk add gnupg gcc g++ make python3-dev libffi-dev openssl-dev gmp-dev
-    - gpg --batch --passphrase $TEST_CONFIG_PASSPHRASE -o tests/config.json tests/config.json.gpg
+    # - gpg --symmetric --batch --passphrase $TEST_CONFIG_PASSPHRASE --output tests/config.json.gpg tests/config.json
+    - gpg --batch --passphrase $TEST_CONFIG_PASSPHRASE --decrypt tests/config.json.gpg --output tests/config.json
     - pip install -r requirements_dev.txt
     - tox
   artifacts:
