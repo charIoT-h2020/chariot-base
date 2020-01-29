@@ -16,8 +16,7 @@ class CloudDataSource(object):
         :param device_id: name of the sensor
         :return: timestamp and value in json format.
         """
-        current_date = datetime.strftime(datetime.now(), '%Y-%m-%d')  # 2018-11-10
-        self.my_database = self.cloudant_client['iotp_%s_default_%s' % (self.orgId, current_date)]
+        self.my_database = self.cloudant_client['chariot-raw-message']
 
         if device_id is None:
             selector = dict(eventType='message',
@@ -29,9 +28,11 @@ class CloudDataSource(object):
                             _id={'$gt': 0})
 
         result_collection = self.my_database.get_query_result(selector,
-                                                              fields=['data'], sort=[{'_id': 'desc'}], limit=1)
+                                                              fields=['payload'], sort=[{'_id': 'desc'}], limit=1)
+
+        print(result_collection)
         if len(result_collection[:]) > 0:
-            return result_collection[0][0]['data']
+            return result_collection[0][0]['payload']
         else:
             return None
 

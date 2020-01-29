@@ -21,10 +21,10 @@ def init_data_source():
 def test_get_last(init_data_source):
     db, point_factory = init_data_source
 
-    point = db.get_last('gateway')
+    point = db.get_last('chariot-sensor')
     assert point['din0'] == 1.0
 
-    point = db.get_last('gateway', '5410ec4d1601')
+    point = db.get_last('chariot-sensor', 'sensor-002')
     assert point['din0'] == 1.0
 
     point = db.get_last('not_exist')

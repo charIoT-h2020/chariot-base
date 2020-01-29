@@ -9,7 +9,7 @@ from chariot_base.connector import WatsonConnector
 
 OPTS = json.load(open('tests/config.json', 'r'))
 options = OPTS['iot']
-fixed_good_message = '{"52-80-6c-75-c3-fd": {"fixedIO": {"din0": 1}}}'
+fixed_good_message = '{"52-80-6c-75-c3-fd": {"fixedIO": {"din0": 1, "din1": 0}}}'
 
 
 @pytest.fixture()

@@ -17,7 +17,7 @@ requirements = [
     'gmqtt',
     'influxdb',
     'cloudant',
-    'ibmiotf',
+    'wiotp-sdk',
     'pytest',
     'fastecdsa',
     'ecdsa',

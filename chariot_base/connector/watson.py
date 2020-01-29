@@ -1,6 +1,6 @@
 from multiprocessing import Process
 
-import ibmiotf.gateway
+import wiotp.sdk.device
 
 
 class WatsonConnector(Process):
@@ -8,9 +8,9 @@ class WatsonConnector(Process):
     def __init__(self, options):
         super(WatsonConnector, self).__init__()
         try:
-            self.iot_client = ibmiotf.gateway.Client(options)
+            self.iot_client = wiotp.sdk.device.DeviceClient(config=options, logHandlers=None)
             self.iot_client.connect()
-        except ibmiotf.ConnectionException as e:
+        except Exception as e:
             print(e)
 
     def publish(self, point):
@@ -18,4 +18,4 @@ class WatsonConnector(Process):
         :param point: A point represent received message.
         :return: True if event publish is successfull.
         """
-        return self.iot_client.publishGatewayEvent(event=point.table, msgFormat="json", data=point.message)
+        return self.iot_client.publishEvent(eventId=point.table, msgFormat="json", data=point.message, qos=0, onPublish=None)
