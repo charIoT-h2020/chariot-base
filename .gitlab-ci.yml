@@ -70,6 +70,7 @@ deploy_production:
     TWINE_USERNAME: $PRODUCTION_USERNAME
     TWINE_PASSWORD: $PRODUCTION_PASSWORD
   script:
+    - apk add gnupg gcc g++ make python3-dev libffi-dev openssl-dev gmp-dev
     - pip install twine
     - twine upload dist/*
   dependencies:
