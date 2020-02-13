@@ -26,10 +26,11 @@ class UnAuthenticatedSensor(Exception):
 
 
 class FirmwareUploadException(Exception):
-    def __init__(self, key, point):
+    def __init__(self, key, point, gateway_name):
         super(Exception, self).__init__()
         self.key = key
         self.point = point
+        self.gateway = gateway_name
 
 
 class DataPointFactory(object):
@@ -66,7 +67,7 @@ class DataPointFactory(object):
         messages = []
         for key, message in decoded_msg.items():
             key = normalize_mac_address(key.replace('NMS_', ''))
-            gateway_name = key
+            gateway_name = key            
             logging.debug(f'key: {key} message: {message}')
             parsed_msg = None
             if FIXEDIO in message:
@@ -77,12 +78,12 @@ class DataPointFactory(object):
             elif BLE in message:
                 parsed_msg, key = self.parse_json_from_smart_sensor(BLE, message, key)
             elif FIRMWARE_UPLOAD in message:
-                parsed_msg, key = self.parse_json_from_firmware(message, key)
+                parsed_msg, key = self.parse_json_from_firmware(message, key, gateway_name)
             else:
                 raise Exception('Message format is not recognized')
 
             if FIRMWARE_UPLOAD in message:
-                point = FirmwareUpdateStatus(self.db, self.firmware_upload_table, parsed_msg)
+                point = FirmwareUpdateStatus(self.db, self.firmware_upload_table, parsed_msg)                
                 point.gateway = gateway_name
                 point.sensor_id = key
             else:
@@ -92,7 +93,7 @@ class DataPointFactory(object):
             messages.append(point)
         return messages
 
-    def parse_json_from_firmware(self, message, key):
+    def parse_json_from_firmware(self, message, key, gateway_name):
         obj = message[FIRMWARE_UPLOAD]
         if SENSORNAME in obj:
             key = 'device_%s_%s' % (key, obj[SENSORNAME])
@@ -102,7 +103,8 @@ class DataPointFactory(object):
         if obj[FIRMWARE_STATUS] == 1 or obj[FIRMWARE_STATUS] == 2:
             return obj, key
         else:
-            raise FirmwareUploadException(key, obj)
+            logging.debug(f'Firmware error for "{gateway_name}"."{key}"')
+            raise FirmwareUploadException(key, obj, gateway_name)
 
     def parse_json_from_smart_sensor(self, connection_type, message, key):
         if SENSORSECURITYEVENT in message[connection_type]:
