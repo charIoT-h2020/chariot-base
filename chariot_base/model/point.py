@@ -53,7 +53,7 @@ class DataPointFactory(object):
 
         i = 0
         for message_parsed in messages_parsed:
-            messages_parsed[i].topic = message.topic
+            message_parsed[i].topic = message.topic
             i = i + 1
 
         return messages_parsed
@@ -66,6 +66,7 @@ class DataPointFactory(object):
         messages = []
         for key, message in decoded_msg.items():
             key = normalize_mac_address(key.replace('NMS_', ''))
+            gateway_name = key
             logging.debug(f'key: {key} message: {message}')
             parsed_msg = None
             if FIXEDIO in message:
@@ -82,9 +83,11 @@ class DataPointFactory(object):
 
             if FIRMWARE_UPLOAD in message:
                 point = FirmwareUpdateStatus(self.db, self.firmware_upload_table, parsed_msg)
+                point.gateway = gateway_name
                 point.sensor_id = key
             else:
                 point = DataPoint(self.db, self.table, parsed_msg)
+                point.gateway = gateway_name
                 point.sensor_id = key
             messages.append(point)
         return messages
@@ -124,6 +127,7 @@ class DataPoint:
         self.table = table
         self.message = message
         self.timestamp = datetime.datetime.utcnow().isoformat()
+        self.gateway = None
         self.topic = None
         self.sensor_id = None
 
