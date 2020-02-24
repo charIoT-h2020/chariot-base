@@ -53,7 +53,7 @@ class LocalConnector(Traceable):
         :param properties: Custom properties
         """
 
-    def on_subscribe(self, client, mid, qos):
+    def on_subscribe(self, client, mid, qos, properties):
         """
         The handler run when the client subscribed to a new topic
 

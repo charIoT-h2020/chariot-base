@@ -46,8 +46,8 @@ class Callbacks(LocalConnector):
                      .format(client._client_id, topic, payload, qos, properties))
         self.messages.append((topic, payload, qos, properties))
 
-    def on_subscribe(self, client, mid, qos):
-        super().on_subscribe(client, mid, qos)
+    def on_subscribe(self, client, mid, qos, properties):
+        super().on_subscribe(client, mid, qos, properties)
         logging.info('[SUBSCRIBED {}] QOS: {}'.format(client._client_id, qos))
         self.subscribeds.append(mid)
 
