@@ -52,10 +52,8 @@ class DataPointFactory(object):
         msg = message.payload.decode('utf-8')
         messages_parsed = self.from_json_string(msg)
 
-        i = 0
-        for message_parsed in messages_parsed:
-            message_parsed[i].topic = message.topic
-            i = i + 1
+        for i in range(len(messages_parsed)):
+            messages_parsed[i].topic = message.topic
 
         return messages_parsed
 

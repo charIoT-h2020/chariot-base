@@ -16,7 +16,9 @@ fixed_good_message = '{"52-80-6c-75-c3-fd": {"fixedIO": {"din0": 1}}}'
 
 @pytest.fixture(scope='module')
 def init_data_source():
-    db = LocalDataSource(options['host'], options['port'], options['username'], options['password'], 'test_db')
+    options['database'] = 'test_db'
+    options['path'] = 'storage'
+    db = LocalDataSource(**options)
     point_factory = DataPointFactory('test_db', 'message')
     yield db,  point_factory
     db.db.drop_database('test_db')

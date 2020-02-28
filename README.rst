@@ -15,7 +15,7 @@ Encrypt application secrets, with the folling command
 
 .. code-block:: console
 
-  $ gpg -c --batch --passphrase test config.json
+  $ gpg --symmetric --batch --passphrase $TEST_CONFIG_PASSPHRASE --output tests/config.json.gpg tests/config.json
 
 
 Features

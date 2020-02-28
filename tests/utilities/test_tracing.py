@@ -92,7 +92,7 @@ def test_inject_http_request(get_tracer):
     service.close_span(root)
 
     env = testing.create_environ(
-            protocol='https',
+            scheme='https',
             host='example.org',
             port=9000,
             app='chariot_base',
