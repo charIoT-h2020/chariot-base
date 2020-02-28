@@ -42,7 +42,7 @@ class LocalConnector(Traceable):
         """
         self.client.publish(topic, msg, qos=qos)
 
-    def on_message(self, client, topic, payload, qos, properties):
+    def on_message(self, client, topic, payload, qos, properties=None):
         """
         Handler for new message
 
@@ -53,7 +53,7 @@ class LocalConnector(Traceable):
         :param properties: Custom properties
         """
 
-    def on_subscribe(self, client, mid, qos, properties):
+    def on_subscribe(self, client, mid, qos, properties=None):
         """
         The handler run when the client subscribed to a new topic
 
@@ -71,7 +71,7 @@ class LocalConnector(Traceable):
         """
         self.disconnected = True
 
-    def on_connect(self, client, flags, rc, properties):
+    def on_connect(self, client, flags, rc, properties=None):
         """
         The handler run when the connections is established
 
