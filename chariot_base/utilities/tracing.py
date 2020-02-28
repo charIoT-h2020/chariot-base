@@ -2,6 +2,7 @@ from jaeger_client import Config
 from opentracing import Format
 from opentracing.ext import tags
 import traceback
+import logging
 
 
 class Tracer(object):
@@ -28,6 +29,7 @@ class Tracer(object):
         )
 
         self.tracer = config.initialize_tracer()
+        logging.debug(f'{self.host}:{self.port}')
 
     def close(self):
         self.tracer.close()
