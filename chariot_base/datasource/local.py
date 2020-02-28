@@ -1,18 +1,21 @@
 # -*- coding: utf-8 -*-
+import logging
 from influxdb import InfluxDBClient
 
 
 def open_datasource(options):
     return LocalDataSource(
-        options['host'], options['port'], options['username'], options['password'], options['database']
+        **options
     )
 
 
 class LocalDataSource(object):
 
-    def __init__(self, hostname, port, username, password, db_name, duration='4w'):
-        self.db = InfluxDBClient(hostname, port, username, password, db_name)
-        self.db.create_database(db_name)
+    def __init__(self, host, port, username, password, database, path, duration='4w'):
+        logging.debug(f'{host}/{path}:{port} <{username}> ({database})')
+        self.db = InfluxDBClient(host=host, port=port, username=username, password=password, database=database, path=path)
+
+        self.db.create_database(database)
         self.db.create_retention_policy('awesome_policy', duration, 3, default=True)
 
     def publish(self, point):
