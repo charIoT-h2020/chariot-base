@@ -53,7 +53,7 @@ class IoTLWrapper(object):
         try:
             return self.IoTState.acl[sensor_id]
         except KeyError:
-            return []
+            return None
 
     def sensor(self):
         return self.IoTState.system['SENSOR']
