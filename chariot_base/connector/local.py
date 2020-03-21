@@ -3,6 +3,8 @@
 
 import uuid
 import gmqtt
+from gmqtt.mqtt.constants import MQTTv311
+import logging
 from ..utilities import Traceable
 
 
@@ -61,6 +63,17 @@ class LocalConnector(Traceable):
         :param mid:
         :param qos: MQTT broker quality of service
         """
+        # in order to check if all the subscriptions were successful, we should first get all subscriptions with this
+        # particular mid (from one subscription request)
+        subscriptions = client.get_subscriptions_by_mid(mid)
+        for subscription, granted_qos in zip(subscriptions, qos):
+            # in case of bad suback code, we can resend  subscription
+            if granted_qos >= gmqtt.constants.SubAckReasonCode.UNSPECIFIED_ERROR.value:
+                logging.warning('[RETRYING SUB {}] mid {}, reason code: {}, properties {}'.format(
+                                client._client_id, mid, granted_qos, properties))
+                client.resubscribe(subscription)
+            logging.info('[SUBSCRIBED {}] mid {}, QOS: {}, properties {}'.format(
+                client._client_id, mid, granted_qos, properties))
 
     def on_disconnect(self, client, packet):
         """
@@ -69,6 +82,7 @@ class LocalConnector(Traceable):
         :param client: the subscribed MQTT client
         :param packet:
         """
+        logging.error('on_disconnect')
         self.disconnected = True
 
     def on_connect(self, client, flags, rc, properties=None):
@@ -80,6 +94,7 @@ class LocalConnector(Traceable):
         :param rc:
         :param properties: Custom properties
         """
+        logging.error('on_connect')
         self.connected = True
         self.connack = (flags, rc, properties)
 
@@ -97,6 +112,14 @@ class LocalConnector(Traceable):
         self.client = client
 
 
+def on_disconnect(client, packet):
+    logging.error('[DISCONNECTED  {}]'.format(client._client_id))
+
+
+def on_connect(client, flags, rc, properties=None):
+    logging.error('[CONNECTED {}]'.format(client._client_id))
+
+
 async def create_client(options, postfix='_client'):
     """
     Create a new GMQTT client
@@ -106,8 +129,16 @@ async def create_client(options, postfix='_client'):
     """
     client_id = '%s%s' % (uuid.uuid4(), postfix)
 
-    client = gmqtt.Client(client_id, clean_session=True)
-    client.set_auth_credentials(options.get('username', ''))
-    await client.connect(host=options['host'], port=options['port'], version=4)
+    client = gmqtt.Client(client_id, session_expiry_interval=60, clean_session=True)
+    
+    client.on_connect = on_connect
+    client.on_disconnect = on_disconnect
 
+    client.set_auth_credentials(options.get('username', ''))
+    await client.connect(
+        host=options['host'],
+        port=options['port'],
+        keepalive=60,
+        version=MQTTv311
+    )
     return client
