@@ -50,6 +50,7 @@ class Configuration(object):
         self.topology = options.get('topology', None)
         self.database = options.get('database', None)
         self.health = options.get('health', None)
+        self.simulation = options.get('simulation', None)
         self.set_logging(options.get('logging', default_logging))
 
     def set_logging(self, options):

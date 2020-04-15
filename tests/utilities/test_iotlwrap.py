@@ -38,7 +38,7 @@ def test_acl(init_clients):
 
     assert client.acl('device_52806c75c3fd_Sensor04')['ALLOW'][0] == 'BMS'
 
-    assert len(client.acl('NotFound')) == 0
+    assert client.acl('NotFound') == None
 
 
 def test_schema(init_clients):

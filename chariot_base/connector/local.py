@@ -82,8 +82,8 @@ class LocalConnector(Traceable):
         :param client: the subscribed MQTT client
         :param packet:
         """
-        logging.error('on_disconnect')
         self.disconnected = True
+        logging.info('[DISCONNECTED  {}]'.format(client._client_id))
 
     def on_connect(self, client, flags, rc, properties=None):
         """
@@ -94,9 +94,9 @@ class LocalConnector(Traceable):
         :param rc:
         :param properties: Custom properties
         """
-        logging.error('on_connect')
         self.connected = True
         self.connack = (flags, rc, properties)
+        logging.info('[CONNECTED {}]'.format(client._client_id))
 
     def register_for_client(self, client):
         """
@@ -113,11 +113,11 @@ class LocalConnector(Traceable):
 
 
 def on_disconnect(client, packet):
-    logging.error('[DISCONNECTED  {}]'.format(client._client_id))
+    logging.info('[DISCONNECTED  {}]'.format(client._client_id))
 
 
 def on_connect(client, flags, rc, properties=None):
-    logging.error('[CONNECTED {}]'.format(client._client_id))
+    logging.info('[CONNECTED {}]'.format(client._client_id))
 
 
 async def create_client(options, postfix='_client'):
