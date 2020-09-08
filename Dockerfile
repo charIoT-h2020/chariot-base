@@ -9,4 +9,5 @@ RUN python setup.py install
 
 FROM python:3.7-alpine AS final
 COPY --from=builder /usr/local/lib/python3.7 /usr/local/lib/python3.7
+RUN apk add libffi-dev openssl-dev gmp-dev
 CMD ["python3"]
