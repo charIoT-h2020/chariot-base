@@ -2,6 +2,7 @@ image: python:3.6-alpine
 
 variables:
   CONTAINER_IMAGE: registry.gitlab.com/$CI_PROJECT_PATH
+  CONTAINER_PUBLIC_IMAGE: charioth2020/$CI_PROJECT_NAME
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
   GIT_SUBMODULE_STRATEGY: recursive
@@ -94,3 +95,21 @@ build:
     - docker push $CONTAINER_IMAGE:$CI_COMMIT_TAG
     - docker push $CONTAINER_IMAGE:$CI_BUILD_REF
     - docker push $CONTAINER_IMAGE:latest
+
+publish:
+  image: docker:stable
+  stage: build
+  services:
+    - docker:dind
+  only:
+    - tags
+    - triggers
+    - schedules
+  script:
+    - docker login -u $DOCKER_PUBLIC_USERNAME -p $DOCKER_PUBLIC_KEY
+    - docker pull $CONTAINER_PUBLIC_IMAGE:latest || true
+    - docker build --cache-from $CONTAINER_PUBLIC_IMAGE:latest --tag $CONTAINER_PUBLIC_IMAGE:$CI_COMMIT_TAG --tag $CONTAINER_PUBLIC_IMAGE:$CI_BUILD_REF --tag $CONTAINER_PUBLIC_IMAGE:latest .
+    - docker push $CONTAINER_PUBLIC_IMAGE:$CI_COMMIT_TAG
+    - docker push $CONTAINER_PUBLIC_IMAGE:$CI_BUILD_REF
+    - docker push $CONTAINER_PUBLIC_IMAGE:latest
+
