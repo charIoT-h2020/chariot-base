@@ -6,7 +6,8 @@ class Message(object):
     """
     Describe message passed between Chariot's components
     """
-    def __init__(self, sensor_id, value):
+    def __init__(self, sensor_id, value, timestamp = None):
+        self.timestamp = None
         self.sensor_id = sensor_id
         self.value = value
         self.destination = None
